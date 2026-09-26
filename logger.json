@@ -1,0 +1,119 @@
+[
+  {
+    "key": "JOBS ASIATOP_INV  INA  SINGLE DIST_1790422624.884",
+    "date": "2026-09-26T11:37:54.241Z",
+    "serverName": "JOBS ASIATOP",
+    "jobName": "INV  INA  SINGLE DIST",
+    "status": "Error (Code: 1)",
+    "lastRun": "26/9/2026, 18.37.04",
+    "description": "Job Aborted: Manually aborted by user: itasiatop"
+  },
+  {
+    "key": "JOBS 3013_INV  INA  SINGLE DIST_1790422624.884",
+    "date": "2026-09-26T11:50:25.604Z",
+    "serverName": "JOBS 3013",
+    "jobName": "INV  INA  SINGLE DIST",
+    "status": "Error (Code: 1)",
+    "lastRun": "26/9/2026, 18.37.04",
+    "description": "Job Aborted: Manually aborted by user: itasiatop"
+  },
+  {
+    "key": "JOBS 3013_ORDER ASW SDN BANYUWANGI(DABYW001)_1790418600.081",
+    "date": "2026-09-26T11:50:25.902Z",
+    "serverName": "JOBS 3013",
+    "jobName": "ORDER ASW SDN BANYUWANGI(DABYW001)",
+    "status": "Error (Code: 1)",
+    "lastRun": "26/9/2026, 17.30.00",
+    "description": "Script exited with code: 1: [=>                                             ]  1/41 =>   2%, < 1 sec/< 1 sec"
+  },
+  {
+    "key": "JOBS 3013_ORDER INA Manual_1790424860.766",
+    "date": "2026-09-26T12:14:26.786Z",
+    "serverName": "JOBS 3013",
+    "jobName": "ORDER INA Manual",
+    "status": "Error (Code: 1)",
+    "lastRun": "26/9/2026, 19.14.20",
+    "description": "Job Aborted: Manually aborted by user: itasiatop"
+  },
+  {
+    "key": "JOBS 3013_REPORT PC AC INA PUL1_1790425464.581",
+    "date": "2026-09-26T12:24:39.766Z",
+    "serverName": "JOBS 3013",
+    "jobName": "REPORT PC AC INA PUL1",
+    "status": "Error (Code: 1)",
+    "lastRun": "26/9/2026, 19.24.24",
+    "description": "Job Aborted: Manually aborted by user: itasiatop"
+  },
+  {
+    "key": "JOBS 3013_INV  INA  SINGLE DIST_1790428461.022",
+    "date": "2026-09-26T13:14:40.006Z",
+    "serverName": "JOBS 3013",
+    "jobName": "INV  INA  SINGLE DIST",
+    "status": "Error (Code: 1)",
+    "lastRun": "26/9/2026, 20.14.21",
+    "description": "Job Aborted: Manually aborted by user: itasiatop"
+  },
+  {
+    "key": "JOBS 3013_IMPORT-MASTER-STOCK-DIST TO PRC_1790428757.622",
+    "date": "2026-09-26T13:19:32.337Z",
+    "serverName": "JOBS 3013",
+    "jobName": "IMPORT-MASTER-STOCK-DIST TO PRC",
+    "status": "Error (Code: 1)",
+    "lastRun": "26/9/2026, 20.19.17",
+    "description": "Job Aborted: Manually aborted by user: itasiatop"
+  },
+  {
+    "key": "JOBS 3013_52.MSTOCKDIST INA KARAWANG (DIKWG001)_1790446599.906",
+    "date": "2026-09-26T18:16:41.664Z",
+    "serverName": "JOBS 3013",
+    "jobName": "52.MSTOCKDIST INA KARAWANG (DIKWG001)",
+    "status": "Error (Code: 1)",
+    "lastRun": "27/9/2026, 01.16.39",
+    "description": "Script exited with code: 1"
+  },
+  {
+    "key": "JOBS 3013_ORDER INA Manual_1790448078.846",
+    "date": "2026-09-26T18:49:12.624Z",
+    "serverName": "JOBS 3013",
+    "jobName": "ORDER INA Manual",
+    "status": "Error (Code: 1)",
+    "lastRun": "27/9/2026, 01.41.18",
+    "description": "Job Aborted: Manually aborted by user: itasiatop"
+  },
+  {
+    "key": "JOBS 3013_ORDER INA Manual_1790447203.304",
+    "date": "2026-09-26T18:49:13.311Z",
+    "serverName": "JOBS 3013",
+    "jobName": "ORDER INA Manual",
+    "status": "Error (Code: 1)",
+    "lastRun": "27/9/2026, 01.26.43",
+    "description": "Job Aborted: Manually aborted by user: itasiatop"
+  },
+  {
+    "key": "JOBS 3013_ORDER INA Manual_1790448462.323",
+    "date": "2026-09-26T18:49:41.189Z",
+    "serverName": "JOBS 3013",
+    "jobName": "ORDER INA Manual",
+    "status": "Error (Code: 1)",
+    "lastRun": "27/9/2026, 01.47.42",
+    "description": "Job Aborted: Manually aborted by user: itasiatop"
+  },
+  {
+    "key": "JOBS 3013_DELETE FILE_1790449200.075",
+    "date": "2026-09-26T19:00:00.765Z",
+    "serverName": "JOBS 3013",
+    "jobName": "DELETE FILE",
+    "status": "Error (Code: 1)",
+    "lastRun": "27/9/2026, 02.00.00",
+    "description": "Script exited with code: 1: sudo: unknown user eska"
+  },
+  {
+    "key": "JOBS 3013_DELETE FILE_1790449200.075",
+    "date": "2026-09-26T19:00:02.289Z",
+    "serverName": "JOBS 3013",
+    "jobName": "DELETE FILE",
+    "status": "Error (Code: 1)",
+    "lastRun": "27/9/2026, 02.00.00",
+    "description": "Script exited with code: 1: sudo: unknown user eska"
+  }
+]

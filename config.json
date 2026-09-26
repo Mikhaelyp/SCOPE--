@@ -1,0 +1,43 @@
+{
+  "CRON_SCHEDULE": "* * * * *",
+  "FAST_POLL_INTERVAL_MS": 1500,
+  "TARGET_SERVERS": [
+    {
+      "id": "srv-jobs-3013",
+      "name": "JOBS 3013",
+      "baseUrl": "https://jobs.asiatop.co.id:3013",
+      "apiUrl": "https://jobs.asiatop.co.id:3013/api/app/get_schedule",
+      "apiKey": "e495e84af0472ba2f71ebe19ffbdb005",
+      "type": "cronacle",
+      "enabled": true
+    },
+    {
+      "id": "srv-jobs-3012",
+      "name": "JOBS 3012",
+      "baseUrl": "https://sfa.asiatop.co.id:3012",
+      "apiUrl": "https://sfa.asiatop.co.id:3012/api/app/get_schedule",
+      "apiKey": "",
+      "type": "cronacle",
+      "enabled": true
+    }
+  ],
+  "WA_TARGET_JID": "120363432244223544@g.us",
+  "WA_TARGET_ROUTING": [
+    {
+      "id": "grp-1790445334916jx65",
+      "type": "group",
+      "name": "[Group] Testing",
+      "target": "120363432244223544@g.us",
+      "enabled": true
+    }
+  ],
+  "IGNORE_SSL_ERRORS": true,
+  "PORT": 3000,
+  "AUTO_ALERT_RETRY": true,
+  "ALERT_DELAY_MINUTES": 0,
+  "SUMMARY_ENABLED": true,
+  "SUMMARY_INTERVAL_MINUTES": 60,
+  "SUMMARY_ONLY_IF_ERROR": true,
+  "ALERT_TEMPLATE": "🚨 *ALERT: JOB SCHEDULER FAILURE* 🚨\n\n📌 *Server:* {serverName}\n❌ *Job Name:* {jobName}\n📊 *Status:* {status}\n⏰ *Execution Time:* {lastRunTime}\n🔗 *Dashboard:* {dashboardUrl}\n\n*Action Required:* Mohon segera lakukan verifikasi/re-run job.",
+  "SUMMARY_TEMPLATE": "📊 *REKAP SUMMARY JOB GAGAL (PERIODIC DIGEST)* 📊\n\n⏰ *Waktu Pemantauan:* {timestamp}\n⚠️ *Total Job Error Aktif:* {totalErrors} Insiden\n\n{errorList}\n\n🔗 *Dashboard Monitoring:* {dashboardUrl}\n_Laporan rekap berkala otomatis setiap {interval} menit._"
+}
