@@ -1,0 +1,3076 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SCOPE — System Control, Operations &amp; Performance Engine</title>
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+      --bg-base: #f8fafc;
+      --bg-surface: #ffffff;
+      --bg-surface-elevated: #f1f5f9;
+      --bg-card: #ffffff;
+      
+      --border-color: #e2e8f0;
+      --border-color-hover: #cbd5e1;
+      
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #64748b;
+
+      --accent-blue: #2563eb;
+      --accent-blue-hover: #1d4ed8;
+      --accent-blue-light: #eff6ff;
+      --accent-blue-border: #bfdbfe;
+
+      --accent-emerald: #16a34a;
+      --accent-emerald-light: #f0fdf4;
+      --accent-emerald-border: #bbf7d0;
+
+      --accent-rose: #dc2626;
+      --accent-rose-light: #fef2f2;
+      --accent-rose-border: #fecaca;
+
+      --accent-amber: #d97706;
+      --accent-amber-light: #fffbeb;
+      --accent-amber-border: #fde68a;
+
+      --accent-cyan: #0284c7;
+      --accent-cyan-light: #f0f9ff;
+      --accent-cyan-border: #bae6fd;
+
+      --accent-violet: #7c3aed;
+      --accent-violet-light: #f5f3ff;
+      --accent-violet-border: #ddd6fe;
+
+      --sidebar-width: 250px;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-card: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+      --shadow-hover: 0 4px 12px 0 rgba(0, 0, 0, 0.07);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg-base);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #f1f5f9; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+    .app-sidebar {
+      width: var(--sidebar-width);
+      background: var(--bg-surface);
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0; bottom: 0; left: 0;
+      z-index: 100;
+      padding: 20px 14px;
+      box-shadow: none;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 4px 18px 4px;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 18px;
+    }
+    .brand-icon {
+      width: 40px;
+      height: 40px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      background: var(--accent-blue-light);
+      border: 1px solid var(--accent-blue-border);
+    }
+    .brand-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .brand-title {
+      font-weight: 800;
+      font-size: 18px;
+      color: #0f172a;
+      letter-spacing: -0.2px;
+      line-height: 1.15;
+    }
+    .brand-sub {
+      font-size: 9px;
+      color: #64748b;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 3px;
+      line-height: 1.25;
+    }
+
+    .nav-menu { list-style: none; display: flex; flex-direction: column; gap: 4px; flex: 1; }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      color: #475569;
+      font-size: 13.5px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      border: 1px solid transparent;
+    }
+    .nav-item:hover { 
+      color: #0f172a; 
+      background: #f1f5f9;
+    }
+    .nav-item.active {
+      color: var(--accent-blue);
+      background: var(--accent-blue-light);
+      font-weight: 600;
+      border-color: var(--accent-blue-border);
+    }
+    .nav-item svg { width: 17px; height: 17px; flex-shrink: 0; }
+
+    .sidebar-footer { 
+      padding-top: 14px; 
+      border-top: 1px solid var(--border-color); 
+      display: flex; 
+      flex-direction: column; 
+      gap: 10px; 
+    }
+    .wa-mini-status {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #f8fafc;
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+      font-size: 12px;
+      font-weight: 500;
+      color: #475569;
+    }
+
+    .main-wrapper {
+      margin-left: var(--sidebar-width);
+      flex: 1;
+      padding: 28px 36px;
+      max-width: 1440px;
+      width: calc(100% - var(--sidebar-width));
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .page-info h1 { 
+      font-size: 22px; 
+      font-weight: 800; 
+      color: #0f172a; 
+      letter-spacing: -0.3px;
+    }
+    .page-info p { 
+      color: #64748b; 
+      font-size: 13.5px; 
+      margin-top: 3px; 
+    }
+    
+    .topbar-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+    .topbar-datetime-widget {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 7px 14px;
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      font-size: 12.5px;
+      color: #334155;
+      box-shadow: var(--shadow-sm);
+    }
+    .datetime-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 500;
+    }
+    .datetime-divider {
+      width: 1px;
+      height: 14px;
+      background: #e2e8f0;
+    }
+    .datetime-time {
+      font-family: var(--font-mono);
+      color: #0f172a;
+      font-weight: 600;
+    }
+
+    .live-stream-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 12px;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      font-weight: 600;
+      color: #15803d;
+    }
+    .live-stream-badge.disconnected {
+      background: #fef2f2;
+      border-color: #fecaca;
+      color: #dc2626;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 600;
+      font-family: var(--font-sans);
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.15s ease;
+    }
+    .btn-primary {
+      background: var(--accent-blue);
+      color: #ffffff;
+      border-color: var(--accent-blue);
+      box-shadow: var(--shadow-sm);
+    }
+    .btn-primary:hover { 
+      background: var(--accent-blue-hover); 
+      border-color: var(--accent-blue-hover);
+    }
+    .btn-secondary {
+      background: #ffffff;
+      color: #334155;
+      border: 1px solid #cbd5e1;
+      box-shadow: var(--shadow-sm);
+    }
+    .btn-secondary:hover { 
+      background: #f8fafc; 
+      border-color: #94a3b8;
+      color: #0f172a;
+    }
+    .btn-danger {
+      background: #dc2626;
+      color: #ffffff;
+      border-color: #dc2626;
+      box-shadow: var(--shadow-sm);
+    }
+    .btn-danger:hover { background: #b91c1c; border-color: #b91c1c; }
+    .btn-success {
+      background: #16a34a;
+      color: #ffffff;
+      border-color: #16a34a;
+      box-shadow: var(--shadow-sm);
+    }
+    .btn-success:hover { background: #15803d; border-color: #15803d; }
+
+    .panel-section { display: none; }
+    .panel-section.active { display: block; animation: fadeIn 0.2s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .stat-card {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 16px 18px;
+      box-shadow: var(--shadow-card);
+      transition: all 0.15s ease;
+    }
+    .stat-card:hover {
+      border-color: var(--border-color-hover);
+      box-shadow: var(--shadow-hover);
+    }
+    .stat-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .stat-title {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .stat-body {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .stat-info {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-width: 0;
+    }
+    .stat-val {
+      font-size: 26px;
+      font-weight: 700;
+      color: #0f172a;
+      line-height: 1.15;
+    }
+    .stat-sub {
+      font-size: 12px;
+      color: #64748b;
+      margin-top: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .stat-sparkline-wrap {
+      width: 88px;
+      height: 38px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: flex-end;
+    }
+    .stat-sparkline {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+
+    .card {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 20px 24px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-card);
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .card-title-text {
+      font-size: 16px;
+      font-weight: 700;
+      color: #0f172a;
+    }
+    .card-desc {
+      font-size: 13px;
+      color: #64748b;
+      margin-top: 2px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 8px;
+      border-radius: var(--radius-sm);
+      font-size: 11.5px;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+    }
+    .badge-emerald {
+      background: #f0fdf4 !important;
+      color: #15803d !important;
+      border: 1px solid #bbf7d0 !important;
+    }
+    .badge-rose {
+      background: #fef2f2 !important;
+      color: #b91c1c !important;
+      border: 1px solid #fecaca !important;
+    }
+    .badge-amber {
+      background: #fffbeb !important;
+      color: #b45309 !important;
+      border: 1px solid #fde68a !important;
+    }
+    .badge-blue {
+      background: #eff6ff !important;
+      color: #1d4ed8 !important;
+      border: 1px solid #bfdbfe !important;
+    }
+    .badge-cyan {
+      background: #f0f9ff !important;
+      color: #0369a1 !important;
+      border: 1px solid #bae6fd !important;
+    }
+    .badge-violet {
+      background: #f5f3ff !important;
+      color: #6d28d9 !important;
+      border: 1px solid #ddd6fe !important;
+    }
+
+    .pulse {
+      width: 6px; height: 6px; border-radius: 50%; background: currentColor;
+      animation: pulseAnim 1.8s infinite;
+    }
+    @keyframes pulseAnim { 0%, 100% { opacity: 0.4; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1.2); } }
+
+    .progress-container {
+      width: 170px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .progress-meta-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+    }
+    .progress-pct-badge {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      color: #1d4ed8;
+      background: #eff6ff;
+      padding: 1px 5px;
+      border-radius: 4px;
+      border: 1px solid #bfdbfe;
+    }
+    .progress-resource-text {
+      font-size: 11px;
+      color: #64748b;
+      white-space: nowrap;
+      font-family: var(--font-mono);
+    }
+    .progress-track {
+      width: 100%;
+      height: 6px;
+      background: #e2e8f0;
+      border-radius: 9999px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: #2563eb;
+      border-radius: 9999px;
+      transition: width 0.3s ease;
+    }
+
+    .table-responsive { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
+    th {
+      padding: 10px 14px; 
+      color: #475569; 
+      font-weight: 600;
+      border-bottom: 1px solid var(--border-color); 
+      text-transform: uppercase; 
+      font-size: 11px;
+      letter-spacing: 0.5px;
+      background: #f8fafc;
+    }
+    td { 
+      padding: 12px 14px; 
+      border-bottom: 1px solid #f1f5f9; 
+      color: #1e293b;
+    }
+    tr:hover td { 
+      background: #f8fafc; 
+    }
+
+    .form-group { margin-bottom: 16px; }
+    .form-label { 
+      display: block; 
+      font-size: 12.5px; 
+      font-weight: 600; 
+      color: #334155; 
+      margin-bottom: 6px; 
+    }
+    .form-control {
+      width: 100%; 
+      background: #ffffff; 
+      border: 1px solid #cbd5e1;
+      border-radius: var(--radius-sm); 
+      padding: 8px 12px; 
+      color: #0f172a; 
+      font-size: 13px;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .form-control:focus { 
+      outline: none; 
+      border-color: var(--accent-blue); 
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    .terminal-box {
+      background: #0f172a; 
+      border: 1px solid #1e293b; 
+      border-radius: var(--radius-sm);
+      padding: 16px; 
+      font-family: var(--font-mono); 
+      font-size: 12px;
+      max-height: 400px; 
+      overflow-y: auto; 
+      display: flex; 
+      flex-direction: column; 
+      gap: 6px;
+      color: #e2e8f0;
+    }
+    .log-line { display: flex; gap: 10px; line-height: 1.5; }
+    .log-time { color: #64748b; }
+    .log-info { color: #38bdf8; }
+    .log-success { color: #4ade80; }
+    .log-warning { color: #fbbf24; }
+    .log-error { color: #f87171; }
+
+    .qr-wrapper {
+      display: inline-flex; flex-direction: column; align-items: center;
+      padding: 20px; background: #ffffff; border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .server-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin-bottom: 20px; }
+    .server-box {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md); 
+      padding: 18px;
+      box-shadow: var(--shadow-card);
+    }
+    .server-title-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .server-name-txt { 
+      font-size: 15px; 
+      font-weight: 700; 
+      color: #0f172a; 
+    }
+
+    .pill-tabs { display: flex; gap: 6px; margin-bottom: 16px; }
+    .pill-tab {
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      background: #ffffff;
+      color: #64748b;
+      border: 1px solid var(--border-color);
+      transition: all 0.15s ease;
+    }
+    .pill-tab:hover { background: #f8fafc; color: #0f172a; }
+    .pill-tab.active {
+      background: var(--accent-blue-light);
+      border-color: var(--accent-blue-border);
+      color: var(--accent-blue);
+    }
+
+    .live-timer-badge {
+      font-family: var(--font-mono);
+      font-weight: 600;
+      color: #b45309;
+      background: #fffbeb;
+      padding: 2px 7px;
+      border-radius: 4px;
+      border: 1px solid #fde68a;
+      display: inline-block;
+      font-size: 11.5px;
+    }
+
+    /* WhatsApp Multi-Target Routing Styles (Clean SaaS) */
+    .routing-target-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      padding: 11px 14px;
+      border-radius: var(--radius-sm);
+      transition: all 0.15s ease;
+    }
+    .routing-target-card:hover {
+      border-color: #cbd5e1;
+      background: #f8fafc;
+    }
+    .target-icon-box {
+      width: 34px;
+      height: 34px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      flex-shrink: 0;
+    }
+    .target-icon-box.private {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      color: #2563eb;
+    }
+    .target-icon-box.group {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      color: #16a34a;
+    }
+    .target-title-text {
+      font-size: 13px;
+      font-weight: 600;
+      color: #0f172a;
+    }
+    .target-jid-text {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: #64748b;
+      margin-top: 1px;
+    }
+    .target-delete-btn {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      padding: 5px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.15s ease;
+    }
+    .target-delete-btn:hover {
+      color: #dc2626;
+      background: #fef2f2;
+    }
+    .group-picker-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      transition: all 0.15s ease;
+      gap: 10px;
+    }
+    .group-picker-card:hover {
+      border-color: #cbd5e1;
+      background: #f8fafc;
+    }
+    .group-picker-title {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: #0f172a;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .group-picker-sub {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      color: #64748b;
+      margin-top: 1px;
+    }
+    .group-add-btn {
+      background: #eff6ff;
+      color: #1d4ed8;
+      border: 1px solid #bfdbfe;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      flex-shrink: 0;
+    }
+    .group-add-btn:hover {
+      background: #2563eb;
+      color: #ffffff;
+      border-color: #2563eb;
+    }
+
+    /* Settings Section SaaS Tokens */
+    .settings-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+      gap: 18px;
+      margin-bottom: 20px;
+    }
+    .tag-chip-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+    .tag-chip {
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      color: #334155;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      user-select: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+    }
+    .tag-chip:hover {
+      background: #eff6ff;
+      border-color: #2563eb;
+      color: #1d4ed8;
+    }
+    .switch-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      color: #0f172a;
+    }
+    .switch-input {
+      appearance: none;
+      width: 40px;
+      height: 22px;
+      background: #cbd5e1;
+      border-radius: 9999px;
+      position: relative;
+      cursor: pointer;
+      outline: none;
+      transition: background 0.2s ease;
+      flex-shrink: 0;
+    }
+    .switch-input:checked {
+      background: #2563eb;
+    }
+    .switch-input::before {
+      content: '';
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      top: 3px;
+      left: 3px;
+      background: #ffffff;
+      transition: transform 0.2s ease;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+    }
+    .switch-input:checked::before {
+      transform: translateX(18px);
+    }
+    .setting-helper-text {
+      font-size: 12px;
+      color: #64748b;
+      margin-top: 4px;
+      line-height: 1.4;
+    }
+
+    #toast {
+      position: fixed; bottom: 24px; right: 24px; 
+      background: #0f172a;
+      border: 1px solid #334155; 
+      border-radius: var(--radius-sm);
+      padding: 12px 18px; 
+      font-size: 13px; 
+      font-weight: 600; 
+      color: #ffffff;
+      display: none; 
+      z-index: 1000; 
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
+    }
+  </style>
+</head>
+<body>
+
+  <aside class="app-sidebar">
+    <div class="brand">
+      <div class="brand-icon">
+        <img src="/logo-icon.png" alt="SCOPE Logo">
+      </div>
+      <div>
+        <div class="brand-title">SCOPE</div>
+        <div class="brand-sub">System Control, Operations &amp; Performance Engine</div>
+      </div>
+    </div>
+
+    <ul class="nav-menu">
+      <li class="nav-item active" onclick="switchMenu('dashboard')">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+        <span>Dashboard</span>
+      </li>
+      <li class="nav-item" onclick="switchMenu('active-jobs')">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        <span>Active Jobs</span>
+        <span id="sideActiveBadge" class="badge badge-cyan" style="margin-left: auto; font-size: 11px; padding: 2px 7px;">0</span>
+      </li>
+      <li class="nav-item" onclick="switchMenu('errors')">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+        <span>Job Error / Gagal</span>
+        <span id="sideErrorBadge" class="badge badge-rose" style="margin-left: auto; font-size: 11px; padding: 2px 7px;">0 Error</span>
+      </li>
+      <li class="nav-item" onclick="switchMenu('jobs')">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+        <span>Job Explorer</span>
+      </li>
+      <li class="nav-item" onclick="switchMenu('alerts')">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+        <span>Riwayat Alert</span>
+      </li>
+      <li class="nav-item" onclick="switchMenu('whatsapp')">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+        <span>WhatsApp Bot</span>
+      </li>
+      <li class="nav-item" onclick="switchMenu('servers')">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"/></svg>
+        <span>Server Target</span>
+      </li>
+      <li class="nav-item" onclick="switchMenu('logs')">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
+        <span>System Logs</span>
+      </li>
+      <li class="nav-item" onclick="switchMenu('settings')">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        <span>Konfigurasi</span>
+      </li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <div class="wa-mini-status">
+        <span style="color: var(--text-muted);">WA Bot</span>
+        <span id="sideWaBadge" class="badge badge-amber"><span class="pulse"></span> Standby</span>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main-wrapper">
+    
+    <header class="topbar">
+      <div class="page-info">
+        <h1 id="pageTitle">Monitoring Dashboard</h1>
+        <p id="pageDesc">Pusat kendali status scheduler, active jobs, dan notifikasi otomatis</p>
+      </div>
+
+      <div class="topbar-actions">
+        <!-- Live Real-Time Stream Status -->
+        <div id="liveStreamBadge" class="live-stream-badge">
+          <span class="pulse"></span>
+          <span id="liveStreamText">REAL-TIME LIVE STREAM</span>
+        </div>
+        <!-- Live Date & Time Clock Widget -->
+        <div class="topbar-datetime-widget">
+          <div class="datetime-item">
+            <i class="fa-regular fa-calendar-days" style="color: var(--accent-blue);"></i>
+            <span id="topbarDate">Memuat Tanggal...</span>
+          </div>
+          <div class="datetime-divider"></div>
+          <div class="datetime-item">
+            <span class="pulse" style="background: var(--accent-emerald); width: 6px; height: 6px;"></span>
+            <i class="fa-regular fa-clock" style="color: var(--accent-emerald);"></i>
+            <span id="topbarTime" class="datetime-time">00:00:00 WIB</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- WhatsApp Target Config Alert Banner -->
+    <div id="waTargetAlertBanner" style="display: none; background: #fffbeb; border: 1px solid #fde68a; border-radius: var(--radius-md); padding: 14px 20px; margin-bottom: 24px; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; box-shadow: var(--shadow-sm);">
+      <div style="display: flex; align-items: center; gap: 14px;">
+        <span style="font-size: 24px;">⚠️</span>
+        <div>
+          <strong style="color: #92400e; font-size: 14px;" id="waBannerTitle">Nomor WhatsApp Penerima Alert Belum Disesuaikan!</strong>
+          <p style="color: #78350f; font-size: 12.5px; margin-top: 2px;" id="waBannerDesc">
+            Target notifikasi masih menggunakan nomor contoh (<code>081234567890</code>). Masukkan nomor Anda di bawah agar notifikasi job gagal otomatis masuk ke WhatsApp Anda.
+          </p>
+        </div>
+      </div>
+      <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+        <input type="text" id="bannerWaInput" placeholder="Contoh: 085776870226" class="form-control" style="width: 210px; font-size: 12.5px; padding: 7px 12px; background: #ffffff;">
+        <button class="btn btn-primary" style="padding: 7px 14px; font-size: 12px;" onclick="saveWaTargetFromBanner()">
+          Simpan & Aktifkan
+        </button>
+        <button class="btn btn-secondary" id="btnUseConnectedBot" style="display: none; padding: 7px 12px; font-size: 12px;" onclick="useConnectedBotNumber()">
+          Gunakan No. WhatsApp Ini
+        </button>
+      </div>
+    </div>
+
+    <!-- MENU 1: DASHBOARD OVERVIEW -->
+    <section id="sec-dashboard" class="panel-section active">
+      <div class="stat-grid" style="grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));">
+        
+        <!-- CARD 1: RATA-RATA CPU USAGE -->
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-title">Rata-Rata CPU Usage</span>
+            <span id="badgeCpuLevel" class="badge badge-emerald" style="font-size: 10px; padding: 2px 8px;">Optimal</span>
+          </div>
+          <div class="stat-body">
+            <div class="stat-info">
+              <div id="statAvgCpu" class="stat-val" style="color: var(--accent-blue);">0.0%</div>
+              <div id="statCpuSub" class="stat-sub">Total Load: 0.0%</div>
+            </div>
+            <div class="stat-sparkline-wrap" title="Trend Real-Time CPU Load">
+              <svg id="sparklineCpu" class="stat-sparkline" viewBox="0 0 100 40" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="gradCpu" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#2563eb" stop-opacity="0.18"/>
+                    <stop offset="100%" stop-color="#2563eb" stop-opacity="0.0"/>
+                  </linearGradient>
+                </defs>
+                <path id="sparklineAreaCpu" d="" fill="url(#gradCpu)"></path>
+                <path id="sparklineLineCpu" d="" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                <circle id="sparklineDotCpu" cx="0" cy="0" r="3" fill="#2563eb" stroke="#ffffff" stroke-width="1.5"></circle>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 2: MEMORY USAGE (RAM) -->
+        <div class="stat-card">
+          <div class="stat-header">
+            <span class="stat-title">Memory (RAM) Usage</span>
+            <span class="badge badge-violet" style="font-size: 10px; padding: 2px 8px;">Scheduler</span>
+          </div>
+          <div class="stat-body">
+            <div class="stat-info">
+              <div id="statMemUsage" class="stat-val" style="color: var(--accent-violet);">0 MB</div>
+              <div id="statMemSub" class="stat-sub">Rata-rata: 0 MB / job</div>
+            </div>
+            <div class="stat-sparkline-wrap" title="Trend Real-Time Memory RAM">
+              <svg id="sparklineMem" class="stat-sparkline" viewBox="0 0 100 40" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="gradMem" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#7c3aed" stop-opacity="0.18"/>
+                    <stop offset="100%" stop-color="#7c3aed" stop-opacity="0.0"/>
+                  </linearGradient>
+                </defs>
+                <path id="sparklineAreaMem" d="" fill="url(#gradMem)"></path>
+                <path id="sparklineLineMem" d="" fill="none" stroke="#7c3aed" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                <circle id="sparklineDotMem" cx="0" cy="0" r="3" fill="#7c3aed" stroke="#ffffff" stroke-width="1.5"></circle>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 3: JOBS SEDANG RUNNING -->
+        <div class="stat-card" style="cursor: pointer;" onclick="switchMenu('active-jobs')">
+          <div class="stat-header">
+            <span class="stat-title">Jobs Sedang Running</span>
+          </div>
+          <div class="stat-body">
+            <div class="stat-info">
+              <div id="statTotalRunning" class="stat-val" style="color: var(--accent-cyan);">0</div>
+              <div class="stat-sub">Eksekusi aktif detik ini (Live)</div>
+            </div>
+            <div class="stat-sparkline-wrap" title="Trend Active Jobs">
+              <svg id="sparklineRunning" class="stat-sparkline" viewBox="0 0 100 40" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="gradRunning" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#0284c7" stop-opacity="0.18"/>
+                    <stop offset="100%" stop-color="#0284c7" stop-opacity="0.0"/>
+                  </linearGradient>
+                </defs>
+                <path id="sparklineAreaRunning" d="" fill="url(#gradRunning)"></path>
+                <path id="sparklineLineRunning" d="" fill="none" stroke="#0284c7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                <circle id="sparklineDotRunning" cx="0" cy="0" r="3" fill="#0284c7" stroke="#ffffff" stroke-width="1.5"></circle>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 4: TOTAL JOB DIPANTAU -->
+        <div class="stat-card" style="cursor: pointer;" onclick="switchMenu('jobs')">
+          <div class="stat-header">
+            <span class="stat-title">Total Job Dipantau</span>
+          </div>
+          <div class="stat-body">
+            <div class="stat-info">
+              <div id="statTotalJobs" class="stat-val">0</div>
+              <div class="stat-sub">Dari semua target server aktif</div>
+            </div>
+            <div class="stat-sparkline-wrap" title="Trend Total Jobs Terpantau">
+              <svg id="sparklineJobs" class="stat-sparkline" viewBox="0 0 100 40" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="gradJobs" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#16a34a" stop-opacity="0.18"/>
+                    <stop offset="100%" stop-color="#16a34a" stop-opacity="0.0"/>
+                  </linearGradient>
+                </defs>
+                <path id="sparklineAreaJobs" d="" fill="url(#gradJobs)"></path>
+                <path id="sparklineLineJobs" d="" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                <circle id="sparklineDotJobs" cx="0" cy="0" r="3" fill="#16a34a" stroke="#ffffff" stroke-width="1.5"></circle>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 5: TOTAL ERROR TERDETEKSI -->
+        <div class="stat-card" style="cursor: pointer;" onclick="switchMenu('errors')">
+          <div class="stat-header">
+            <span class="stat-title">Total Error Terdeteksi</span>
+          </div>
+          <div class="stat-body">
+            <div class="stat-info">
+              <div id="statTotalErrors" class="stat-val" style="color: var(--accent-rose);">0</div>
+              <div id="statErrorSub" class="stat-sub">0 aktif | 0 recovered</div>
+            </div>
+            <div class="stat-sparkline-wrap" title="Trend Incident Error">
+              <svg id="sparklineErrors" class="stat-sparkline" viewBox="0 0 100 40" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="gradErrors" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#dc2626" stop-opacity="0.18"/>
+                    <stop offset="100%" stop-color="#dc2626" stop-opacity="0.0"/>
+                  </linearGradient>
+                </defs>
+                <path id="sparklineAreaErrors" d="" fill="url(#gradErrors)"></path>
+                <path id="sparklineLineErrors" d="" fill="none" stroke="#dc2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                <circle id="sparklineDotErrors" cx="0" cy="0" r="3" fill="#dc2626" stroke="#ffffff" stroke-width="1.5"></circle>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Active / Running Jobs Section -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title-text" style="display: flex; align-items: center; gap: 8px;">
+              <span class="pulse" style="background: var(--accent-blue);"></span>
+              Active Jobs yang Sedang Berjalan (Real-Time Live)
+            </div>
+            <div class="card-desc">Job scheduler yang sedang dieksekusi detik ini (timer dan progress berjalan langsung)</div>
+          </div>
+          <span id="activeJobsBadgeCount" class="badge badge-blue">0 Running</span>
+        </div>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Job ID</th>
+                <th>Server</th>
+                <th>Nama Event / Job</th>
+                <th>Category</th>
+                <th>Hostname</th>
+                <th>Elapsed Time (Live)</th>
+                <th>Progress & Resource</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="dashActiveJobsBody">
+              <tr>
+                <td colspan="8" style="text-align: center; color: var(--text-muted); padding: 24px;">
+                  Tidak ada job yang sedang berjalan saat ini.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Live Error / Failures Section -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title-text" style="display: flex; align-items: center; gap: 8px;">
+              <span class="pulse" style="background: var(--accent-rose);"></span>
+              Daftar Job Gagal / Error Terdeteksi (Incident Tracker)
+              <span class="badge badge-emerald" style="font-size: 11px; margin-left: 6px;"><span class="pulse"></span> Auto-Sent to WA</span>
+            </div>
+            <div class="card-desc">Setiap job error otomatis dikirim ke WhatsApp tanpa perlu klik manual (Real-time Auto-Dispatch)</div>
+          </div>
+          <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+            <button class="btn btn-primary" style="padding: 6px 12px; font-size: 12px;" onclick="sendAllActiveErrorsAlert()" title="Kirim seluruh error yang masih aktif ke nomor WhatsApp">
+              <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+              Kirim Semua Error ke WA
+            </button>
+            <button class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;" onclick="switchMenu('errors')">Buka Error Tracker Lengkap &rarr;</button>
+            <span id="detectedErrorsBadgeCount" class="badge badge-rose">0 Insiden</span>
+          </div>
+        </div>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Waktu Kejadian</th>
+                <th>Server</th>
+                <th>Nama Job</th>
+                <th>Kategori</th>
+                <th>Error Code</th>
+                <th>Alasan / Keterangan Error</th>
+                <th>Status Terkini</th>
+                <th style="text-align: center;">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="detectedErrorsBody">
+              <tr>
+                <td colspan="8" style="text-align: center; color: var(--text-muted); padding: 24px;">
+                  Belum ada error terdeteksi. Semua scheduler berjalan normal.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Server Target Cards -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title-text">Status Target Server Scheduler</div>
+            <div class="card-desc">Status konektivitas real-time & respons Cronacle API</div>
+          </div>
+        </div>
+        <div id="dashboardServerGrid" class="server-grid"></div>
+      </div>
+    </section>
+
+    <!-- MENU 2: ACTIVE JOBS FULL VIEW -->
+    <section id="sec-active-jobs" class="panel-section">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title-text">Detail Active Jobs yang Sedang Berjalan (Live Real-Time)</div>
+            <div class="card-desc">Monitoring proses live detik per detik, resource RAM, CPU, dan durasi eksekusi</div>
+          </div>
+          <div style="display: flex; gap: 10px; align-items: center;">
+            <span class="badge badge-cyan"><span class="pulse"></span> LIVE STREAMING</span>
+          </div>
+        </div>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Job ID</th>
+                <th>Server</th>
+                <th>Nama Event / Job</th>
+                <th>Category</th>
+                <th>Target Host</th>
+                <th>Elapsed Time (Live)</th>
+                <th>CPU & Mem</th>
+                <th>PID</th>
+                <th>Trigger Source</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="fullActiveJobsBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- MENU 3: DEDICATED JOB ERROR / GAGAL (INCIDENT LOG) -->
+    <section id="sec-errors" class="panel-section">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title-text">Pusat Pelacakan Error & Kegagalan Job (Error Incident Tracker)</div>
+            <div class="card-desc">Daftar seluruh riwayat kegagalan job dari seluruh server scheduler dengan tracking pemulihan</div>
+          </div>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <button class="btn btn-primary" onclick="sendAllActiveErrorsAlert()" title="Kirim seluruh error yang masih aktif ke WhatsApp">
+              <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+              Kirim Semua Error ke WA
+            </button>
+            <button class="btn btn-secondary" onclick="triggerCheck()">Pindai Ulang Deep History</button>
+            <button class="btn btn-danger" onclick="clearErrorHistory()">Bersihkan Log Error</button>
+          </div>
+        </div>
+
+        <div class="pill-tabs">
+          <div class="pill-tab active" id="errTabAll" onclick="filterErrorTab('ALL')">Semua Insiden (<span id="countErrAll">0</span>)</div>
+          <div class="pill-tab" id="errTabActive" onclick="filterErrorTab('ACTIVE')">🔴 Active Error / Belum Selesai (<span id="countErrActive">0</span>)</div>
+          <div class="pill-tab" id="errTabRecovered" onclick="filterErrorTab('RECOVERED')">🟢 Recovered / Sukses di Retry (<span id="countErrRecovered">0</span>)</div>
+        </div>
+
+        <div style="display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap;">
+          <input type="text" id="errSearchInput" placeholder="Cari nama job, server, atau pesan error..." class="form-control" style="max-width: 320px;" oninput="renderDedicatedErrorsTable()">
+          <select id="errServerFilter" class="form-control" style="max-width: 180px;" onchange="renderDedicatedErrorsTable()">
+            <option value="ALL">Semua Server</option>
+            <option value="JOBS 3013">JOBS 3013</option>
+            <option value="JOBS 3012">JOBS 3012</option>
+          </select>
+        </div>
+
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Waktu Kejadian</th>
+                <th>Server</th>
+                <th>Nama Job</th>
+                <th>Kategori</th>
+                <th>Error Code</th>
+                <th>Detail & Log Kegagalan</th>
+                <th>Status Saat Ini</th>
+                <th style="text-align: center;">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="dedicatedErrorsTableBody">
+              <tr>
+                <td colspan="8" style="text-align: center; color: var(--text-muted); padding: 30px;">
+                  Memuat data error...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- MENU 4: JOB EXPLORER -->
+    <section id="sec-jobs" class="panel-section">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title-text">Semua Job Scheduler</div>
+            <div class="card-desc">Daftar seluruh job aktif dari server terhubung</div>
+          </div>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <input type="text" id="jobSearchInput" placeholder="Cari nama job..." class="form-control" style="width: 260px;" oninput="renderJobsTable()">
+            <select id="jobStatusFilter" class="form-control" style="width: 200px;" onchange="renderJobsTable()">
+              <option value="ALL">Semua Status</option>
+              <option value="ACTIVE_ERROR">🔴 Hanya Error Aktif</option>
+              <option value="PAST_ERROR">🟡 Ada Riwayat Error</option>
+              <option value="RUNNING">🔵 Hanya Running</option>
+              <option value="SUCCESS">🟢 Hanya Sukses</option>
+            </select>
+          </div>
+        </div>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Server</th>
+                <th>Nama Job</th>
+                <th>Category</th>
+                <th>Status Terakhir</th>
+                <th>Eksekusi Terakhir</th>
+                <th>Durasi</th>
+              </tr>
+            </thead>
+            <tbody id="allJobsTableBody">
+              <tr>
+                <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 30px;">
+                  Memuat data job...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- MENU 5: RIWAYAT ALERT & ANTI-SPAM -->
+    <section id="sec-alerts" class="panel-section">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title-text">Log Cache Alert Anti-Spam (Notifikasi WA)</div>
+            <div class="card-desc">Riwayat pesan error yang sudah pernah dikirimkan ke WhatsApp</div>
+          </div>
+          <button class="btn btn-danger" onclick="clearAlertLogs()">Kosongkan Cache Alert</button>
+        </div>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Waktu Catat</th>
+                <th>Server</th>
+                <th>Nama Job</th>
+                <th>Status</th>
+                <th>Alert Key Hash</th>
+              </tr>
+            </thead>
+            <tbody id="antiSpamTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- MENU 6: WHATSAPP BOT & MULTI-TARGET ROUTING (MATCHING MOCKUP) -->
+    <section id="sec-whatsapp" class="panel-section">
+      
+      <!-- Top Header Action Bar -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; flex-wrap: wrap; gap: 14px;">
+        <div>
+          <h2 style="font-size: 20px; font-weight: 800; color: #0f172a; display: flex; align-items: center; gap: 10px;">
+            <span style="color: var(--accent-emerald); display: inline-flex;"><svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg></span>
+            Advanced Alert Routing &amp; Distribution
+          </h2>
+          <p style="color: var(--text-secondary); font-size: 13px; margin-top: 3px;">
+            Konfigurasi distribusi alert ke banyak nomor &amp; grup WhatsApp secara serentak (Multi-Target Broadcast)
+          </p>
+        </div>
+        <button onclick="fetchWhatsAppGroups()" class="btn btn-secondary" style="font-size: 12.5px; padding: 8px 16px;">
+          <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+          Sync Data Grup WA
+        </button>
+      </div>
+
+      <!-- 2-Column Grid (7 Cols Left / 5 Cols Right) -->
+      <div style="display: grid; grid-template-columns: repeat(12, 1fr); gap: 24px;">
+
+        <!-- Left Column: Configurator (7 Columns) -->
+        <div style="grid-column: span 7;" class="routing-left-col">
+          <div class="card" style="margin-bottom: 0;">
+            <div class="card-header" style="border-bottom: 1px solid var(--border-color); padding-bottom: 14px; margin-bottom: 16px;">
+              <div>
+                <h3 class="card-title-text" style="font-size: 16px;">Aturan Pengiriman Multi-Target</h3>
+                <p class="card-desc">Alert akan dikirim serentak ke semua penerima yang ditambahkan di bawah</p>
+              </div>
+              <span class="badge badge-violet" style="font-size: 11px; padding: 4px 10px;">
+                Broadcast Mode
+              </span>
+            </div>
+
+            <!-- Quick Add Input Bar -->
+            <div style="margin-bottom: 18px;">
+              <label style="font-size: 12.5px; font-weight: 600; color: var(--text-primary); display: block; margin-bottom: 8px;">
+                Tambah Target Penerima Barumu:
+              </label>
+              <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <select id="targetCategory" class="form-control" style="width: 140px; font-size: 12.5px;">
+                  <option value="private">Chat Pribadi</option>
+                  <option value="group">Grup WA</option>
+                </select>
+                <input type="text" id="targetLabelInput" placeholder="Label (cth: NOC Alert)" class="form-control" style="width: 140px; font-size: 12.5px;">
+                <input type="text" id="targetInput" placeholder="Nomor WA (cth: 0857...) / ID Group (@g.us)" class="form-control" style="flex: 1; min-width: 170px; font-family: var(--font-mono); font-size: 12.5px;">
+                <button onclick="addTargetRouting()" class="btn btn-success" style="padding: 8px 16px; font-size: 12.5px; font-weight: 600; white-space: nowrap;">
+                  <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                  Tambah
+                </button>
+              </div>
+            </div>
+
+            <!-- Target List (Dynamic Chips / Items) -->
+            <div style="margin-bottom: 20px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <span style="font-size: 12.5px; font-weight: 600; color: var(--text-secondary);">
+                  Daftar Penerima Aktif Saat Ini:
+                </span>
+                <span id="targetListCountBadge" class="badge badge-blue" style="font-size: 11px; padding: 2px 7px;">0 Target</span>
+              </div>
+              <div id="targetListContainer" style="display: flex; flex-direction: column; gap: 8px; min-height: 120px; max-height: 380px; overflow-y: auto; padding-right: 4px;">
+                <!-- Dynamically rendered -->
+              </div>
+            </div>
+
+            <!-- Actions Footer -->
+            <div style="padding-top: 16px; border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+              <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <button onclick="saveTargetRouting()" class="btn btn-primary" style="padding: 9px 18px; font-size: 12.5px;">
+                  <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/></svg>
+                  Simpan Perubahan Target
+                </button>
+                <button onclick="sendBroadcastTest()" class="btn btn-secondary" style="padding: 9px 16px; font-size: 12.5px;">
+                  <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+                  Uji Coba Broadcast
+                </button>
+              </div>
+              <span id="routingStatusToast" style="display: none; color: var(--accent-emerald); font-size: 12.5px; font-weight: 600;">
+                ✅ Routing diperbarui!
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Session & Group Picker (5 Columns) -->
+        <div style="grid-column: span 5; display: flex; flex-direction: column; gap: 20px;" class="routing-right-col">
+          
+          <!-- Card 1: WhatsApp Bot Session State -->
+          <div class="card" style="margin-bottom: 0;">
+            <div class="card-header" style="margin-bottom: 12px;">
+              <div>
+                <h3 class="card-title-text" style="font-size: 15px;">Status Sesi WhatsApp Bot</h3>
+                <p class="card-desc">Sesi autentikasi aktif Baileys</p>
+              </div>
+              <span id="waBigBadge" class="badge badge-emerald" style="font-size: 11px;">
+                <span class="pulse"></span> Online
+              </span>
+            </div>
+
+            <!-- QR Box (Visible when disconnected / reset requested) -->
+            <div id="waQrBox" style="display: none; margin: 16px auto; text-align: center;">
+              <div class="qr-wrapper" style="margin: 0 auto;">
+                <div id="qrCodeContainer"></div>
+                <p style="color: #1e293b; font-size: 12px; font-weight: 700; margin-top: 10px;">
+                  Scan via WhatsApp > Perangkat Tertaut
+                </p>
+              </div>
+            </div>
+
+            <!-- Connected Account Box -->
+            <div id="waConnectedBox" style="background: var(--accent-emerald-light); border: 1px solid var(--accent-emerald-border); border-radius: var(--radius-md); padding: 14px 16px; margin-bottom: 14px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                <strong style="color: var(--accent-emerald); font-size: 13px;">✅ Bot Terhubung</strong>
+                <span class="badge badge-emerald" style="font-size: 10px;">Ready</span>
+              </div>
+              <p id="waAccountInfo" style="color: var(--text-secondary); font-size: 12.5px;"></p>
+            </div>
+
+            <button class="btn btn-danger" style="width: 100%; justify-content: center; font-size: 12px; padding: 8px 14px;" onclick="resetWaSession()">
+              🔄 Tautkan Ulang / Reset Sesi QR
+            </button>
+          </div>
+
+          <!-- Card 2: Quick Add Group WA -->
+          <div class="card" style="margin-bottom: 0; flex: 1; display: flex; flex-direction: column;">
+            <div class="card-header" style="margin-bottom: 12px; align-items: flex-start;">
+              <div>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <h3 class="card-title-text" style="font-size: 15px;">Quick Add Group WA</h3>
+                  <span id="waGroupTotalCountBadge" class="badge badge-emerald" style="font-size: 10px; padding: 2px 7px;">0 Grup</span>
+                </div>
+                <p class="card-desc">Daftar grup yang diikuti oleh akun WhatsApp Bot saat ini:</p>
+              </div>
+            </div>
+
+            <!-- Group Search Bar -->
+            <div style="margin-bottom: 12px; position: relative;">
+              <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #64748b; font-size: 12px; pointer-events: none;"></i>
+              <input type="text" id="waGroupSearchInput" placeholder="Cari nama grup atau ID WA (@g.us)..." class="form-control" style="padding-left: 34px; padding-right: 32px; font-size: 12px;" oninput="onGroupSearchInput(this.value)">
+              <button id="waGroupSearchClearBtn" onclick="clearGroupSearch()" style="display: none; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: #94a3b8; cursor: pointer; font-size: 12px; padding: 4px;" title="Reset pencarian">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+
+            <div id="waGroupListContainer" style="display: flex; flex-direction: column; gap: 8px; max-height: 280px; overflow-y: auto; padding-right: 4px; flex: 1;">
+              <div style="text-align: center; color: var(--text-muted); padding: 24px 12px; font-size: 12px;">
+                Memuat daftar grup bot...
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </section>
+
+    <!-- MENU 7: SERVER TARGET MANAGEMENT -->
+    <section id="sec-servers" class="panel-section">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title-text">Kelola Server Target Scheduler</div>
+            <div class="card-desc">Atur endpoint dan API Key masing-masing server Chronacle</div>
+          </div>
+        </div>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Nama Server</th>
+                <th>Base URL Dashboard</th>
+                <th>API Key</th>
+                <th>Status Koneksi</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="serversConfigTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- MENU 8: SYSTEM LOGS -->
+    <section id="sec-logs" class="panel-section">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title-text">Live System & Network Logs</div>
+            <div class="card-desc">Aktivitas real-time monitoring engine</div>
+          </div>
+        </div>
+        <div class="terminal-box" id="systemLogsTerminal"></div>
+      </div>
+    </section>
+
+    <!-- MENU 9: SETTINGS & KONFIGURASI -->
+    <section id="sec-settings" class="panel-section">
+      <div class="card" style="margin-bottom: 22px;">
+        <div class="card-header" style="margin-bottom: 0;">
+          <div>
+            <h2 class="card-title-text" style="font-size: 19px;">Pusat Konfigurasi & Format Notifikasi Bot</h2>
+            <p class="card-desc">Atur format template pesan, jeda delay pengiriman, dan jadwal rekap summary otomatis</p>
+          </div>
+        </div>
+      </div>
+
+      <form id="settingsForm" onsubmit="saveSettings(event)">
+        
+        <div class="settings-grid">
+          
+          <!-- CARD 1: FORMAT & TEMPLATE PESAN ALERT INSTAN (JOB GAGAL) -->
+          <div class="card" style="margin-bottom: 0;">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title-text" style="color: var(--accent-rose); display: flex; align-items: center; gap: 8px;">
+                  <i class="fa-solid fa-triangle-exclamation"></i>
+                  Pesan Alert Job Gagal (Instant Alert)
+                </h3>
+                <p class="card-desc">Format pesan notifikasi dan jeda delay saat job error terdeteksi</p>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Jeda / Delay Pengiriman Alert</label>
+              <select id="cfgAlertDelay" class="form-control">
+                <option value="0">⚡ Instan Seketika (Tanpa Delay - Real-Time 24/7)</option>
+                <option value="1">⏱️ Tunda 1 Menit setelah error terjadi</option>
+                <option value="3">⏱️ Tunda 3 Menit setelah error terjadi</option>
+                <option value="5">⏱️ Tunda 5 Menit setelah error terjadi</option>
+                <option value="10">⏱️ Tunda 10 Menit setelah error terjadi</option>
+                <option value="15">⏱️ Tunda 15 Menit setelah error terjadi</option>
+                <option value="30">⏱️ Tunda 30 Menit setelah error terjadi</option>
+              </select>
+              <p class="setting-helper-text">Pilih <b>Instan</b> agar notifikasi langsung meluncur ke WhatsApp begitu scheduler job gagal.</p>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 8px;">
+              <label class="form-label">Template Pesan WhatsApp Alert</label>
+              <textarea id="cfgTemplate" class="form-control" rows="8" style="font-family: var(--font-mono); font-size: 12px; line-height: 1.5;"></textarea>
+            </div>
+
+            <div>
+              <span style="font-size: 11px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase;">Klik tag untuk menyisipkan variabel:</span>
+              <div class="tag-chip-container">
+                <span class="tag-chip" onclick="insertTagToField('cfgTemplate', '{serverName}')">+ {serverName}</span>
+                <span class="tag-chip" onclick="insertTagToField('cfgTemplate', '{jobName}')">+ {jobName}</span>
+                <span class="tag-chip" onclick="insertTagToField('cfgTemplate', '{status}')">+ {status}</span>
+                <span class="tag-chip" onclick="insertTagToField('cfgTemplate', '{lastRunTime}')">+ {lastRunTime}</span>
+                <span class="tag-chip" onclick="insertTagToField('cfgTemplate', '{dashboardUrl}')">+ {dashboardUrl}</span>
+                <span class="tag-chip" onclick="insertTagToField('cfgTemplate', '{errorCode}')">+ {errorCode}</span>
+                <span class="tag-chip" onclick="insertTagToField('cfgTemplate', '{errorDesc}')">+ {errorDesc}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- CARD 2: FITUR REKAP / SUMMARY JOB ERROR BERKALA (PERIODIC DIGEST) -->
+          <div class="card" style="margin-bottom: 0; display: flex; flex-direction: column;">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title-text" style="color: var(--accent-blue); display: flex; align-items: center; gap: 8px;">
+                  <i class="fa-solid fa-chart-pie"></i>
+                  Rekap / Summary Job Error Berkala
+                </h3>
+                <p class="card-desc">Bot merangkum seluruh daftar error aktif secara berkala</p>
+              </div>
+              <label class="switch-label">
+                <input type="checkbox" id="cfgSummaryEnabled" class="switch-input" onchange="onSummaryToggleChange(this.checked)">
+                <span id="summarySwitchText" style="font-size: 12px; color: var(--accent-emerald);">Aktif</span>
+              </label>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Frekuensi / Interval Pengiriman Summary</label>
+              <select id="cfgSummaryInterval" class="form-control">
+                <option value="5">Setiap 5 Menit Sekali</option>
+                <option value="10">Setiap 10 Menit Sekali</option>
+                <option value="15">Setiap 15 Menit Sekali</option>
+                <option value="30">Setiap 30 Menit Sekali (Direkomendasikan)</option>
+                <option value="60">Setiap 1 Jam Sekali (60 Menit)</option>
+                <option value="120">Setiap 2 Jam Sekali (120 Menit)</option>
+                <option value="240">Setiap 4 Jam Sekali</option>
+                <option value="720">Setiap 12 Jam Sekali</option>
+                <option value="1440">Setiap 24 Jam Sekali (Harian)</option>
+              </select>
+              <p class="setting-helper-text">Bot akan mengompilasi rekap seluruh error aktif dan mengirimkannya sesuai jadwal.</p>
+            </div>
+
+            <div class="form-group" style="background: #f8fafc; border: 1px solid var(--border-color); padding: 10px 14px; border-radius: var(--radius-sm);">
+              <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 12.5px; color: #334155;">
+                <input type="checkbox" id="cfgSummaryOnlyIfError" style="accent-color: var(--accent-blue); width: 16px; height: 16px;">
+                <span>Hanya kirim rekap jika ada <b>minimal 1 error aktif</b> (Jangan kirim jika normal)</span>
+              </label>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 8px; flex: 1;">
+              <label class="form-label">Template Pesan Summary Error</label>
+              <textarea id="cfgSummaryTemplate" class="form-control" rows="8" style="font-family: var(--font-mono); font-size: 12px; line-height: 1.5;"></textarea>
+            </div>
+
+            <div>
+              <span style="font-size: 11px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase;">Klik tag untuk menyisipkan variabel:</span>
+              <div class="tag-chip-container">
+                <span class="tag-chip" onclick="insertTagToField('cfgSummaryTemplate', '{timestamp}')">+ {timestamp}</span>
+                <span class="tag-chip" onclick="insertTagToField('cfgSummaryTemplate', '{totalErrors}')">+ {totalErrors}</span>
+                <span class="tag-chip" onclick="insertTagToField('cfgSummaryTemplate', '{errorList}')">+ {errorList}</span>
+                <span class="tag-chip" onclick="insertTagToField('cfgSummaryTemplate', '{dashboardUrl}')">+ {dashboardUrl}</span>
+                <span class="tag-chip" onclick="insertTagToField('cfgSummaryTemplate', '{interval}')">+ {interval}</span>
+              </div>
+            </div>
+
+            <div style="margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border-color);">
+              <button type="button" class="btn btn-secondary" style="width: 100%; justify-content: center; font-size: 12.5px; padding: 9px 14px;" onclick="testSendSummaryNow()">
+                <i class="fa-regular fa-paper-plane" style="color: var(--accent-blue);"></i>
+                Uji Coba Kirim Rekap Summary ke WA Sekarang
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- CARD 3: ENGINE, SSL & JADWAL PEMANTAUAN -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title-text">Engine Scheduler & Keamanan Koneksi</h3>
+              <p class="card-desc">Pengaturan interval polling latar belakang dan penanganan SSL internal</p>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px;">
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label">Target WhatsApp Utama (Fallback JID)</label>
+              <input type="text" id="cfgWaTarget" class="form-control" required placeholder="628xxxxxxxxxx@s.whatsapp.net">
+              <p class="setting-helper-text">Gunakan menu <b>WhatsApp Bot</b> untuk routing grup & multi-target.</p>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label">Interval Pengecekan Deep Cron</label>
+              <input type="text" id="cfgCron" class="form-control" required value="*/10 * * * * *">
+              <p class="setting-helper-text">Format Cron (default: <code>*/10 * * * * *</code> = 10 detik).</p>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label">Abaikan Error SSL (Self-Signed Certificates)</label>
+              <select id="cfgSsl" class="form-control">
+                <option value="true">Aktif (Abaikan Error SSL Server Internal)</option>
+                <option value="false">Nonaktif (Wajib Sertifikat SSL Valid)</option>
+              </select>
+              <p class="setting-helper-text">Disarankan <b>Aktif</b> jika target server menggunakan sertifikat self-signed.</p>
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--border-color);">
+            <button type="submit" class="btn btn-primary" style="padding: 11px 26px; font-size: 13.5px;">
+              <i class="fa-regular fa-floppy-disk"></i>
+              Simpan Seluruh Konfigurasi
+            </button>
+          </div>
+        </div>
+
+      </form>
+    </section>
+
+  </main>
+
+  <div id="toast">Notifikasi</div>
+
+  <script>
+    let globalState = null;
+    let currentQr = null;
+    let allJobsList = [];
+    let allActiveJobsList = [];
+    let detectedErrorsList = [];
+    let currentErrorTab = 'ALL';
+    let sseEventSource = null;
+
+    // WhatsApp Multi-Target Routing State
+    let workingRoutingList = [];
+    let isRoutingModified = false;
+    let waGroupsLoaded = false;
+
+    const menuTitles = {
+      dashboard: { title: 'Monitoring Dashboard', desc: 'Pusat kendali status scheduler, active jobs, dan notifikasi otomatis' },
+      'active-jobs': { title: 'Active Jobs Live Monitor', desc: 'Daftar seluruh job yang sedang dieksekusi saat ini' },
+      errors: { title: 'Pusat Pelacakan Error & Kegagalan', desc: 'Daftar lengkap seluruh job gagal dengan riwayat retry & recovery' },
+      jobs: { title: 'Job Explorer', desc: 'Daftar dan status seluruh job yang terdeteksi dari semua server' },
+      alerts: { title: 'Riwayat Alert & Anti-Spam', desc: 'Catatan error yang sudah terkirim ke WhatsApp' },
+      whatsapp: { title: 'WhatsApp Gateway & Multi-Target Routing', desc: 'Distribusi alert multi-target serentak & integrasi grup Baileys' },
+      servers: { title: 'Kelola Server Target', desc: 'Daftar server Chronos / Chronicle yang dimonitor' },
+      logs: { title: 'System Logs', desc: 'Log real-time aktivitas monitoring engine' },
+      settings: { title: 'Konfigurasi Sistem', desc: 'Pengaturan cron, nomor tujuan WhatsApp, dan template notifikasi' }
+    };
+
+    // Real-Time Sparkline Chart Engine (Rolling history points)
+    const sparklineHistories = {
+      cpu: [3.8, 4.2, 4.0, 4.5, 4.1, 4.7, 5.0, 4.4, 4.6, 4.8, 4.5, 4.7],
+      mem: [1610, 1625, 1620, 1635, 1630, 1640, 1638, 1645, 1641, 1642.8],
+      running: [0, 1, 0, 0, 2, 1, 0, 1, 0, 0],
+      jobs: [15, 15, 15, 15, 15, 15, 15, 15, 15, 15],
+      errors: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+    };
+
+    function drawSparkline(svgPrefix, dataArray, minValOverride = null, maxValOverride = null) {
+      if (!dataArray || dataArray.length < 2) return;
+      
+      const width = 100;
+      const height = 40;
+      const padTop = 6;
+      const padBottom = 6;
+      const drawHeight = height - padTop - padBottom;
+      
+      let min = minValOverride !== null ? minValOverride : Math.min(...dataArray);
+      let max = maxValOverride !== null ? maxValOverride : Math.max(...dataArray);
+      
+      // Ensure range is never 0
+      if (min === max) {
+        min = min * 0.85;
+        max = max > 0 ? max * 1.15 : 1;
+      }
+      if (max - min < 0.1) {
+        max = min + 1;
+      }
+      
+      const range = max - min;
+      const stepX = width / (dataArray.length - 1);
+      
+      const points = dataArray.map((val, idx) => {
+        const x = idx * stepX;
+        const normalized = (val - min) / range;
+        const y = height - padBottom - (normalized * drawHeight);
+        return { x: Number(x.toFixed(1)), y: Number(y.toFixed(1)) };
+      });
+      
+      let dLine = `M ${points[0].x},${points[0].y}`;
+      for (let i = 0; i < points.length - 1; i++) {
+        const p0 = points[i];
+        const p1 = points[i + 1];
+        const cx1 = p0.x + (p1.x - p0.x) * 0.45;
+        const cy1 = p0.y;
+        const cx2 = p0.x + (p1.x - p0.x) * 0.55;
+        const cy2 = p1.y;
+        dLine += ` C ${cx1.toFixed(1)},${cy1.toFixed(1)} ${cx2.toFixed(1)},${cy2.toFixed(1)} ${p1.x},${p1.y}`;
+      }
+      
+      const lastPoint = points[points.length - 1];
+      const dArea = `${dLine} L ${lastPoint.x},${height} L ${points[0].x},${height} Z`;
+      
+      const lineEl = document.getElementById('sparklineLine' + svgPrefix);
+      const areaEl = document.getElementById('sparklineArea' + svgPrefix);
+      const dotEl = document.getElementById('sparklineDot' + svgPrefix);
+      
+      if (lineEl) lineEl.setAttribute('d', dLine);
+      if (areaEl) areaEl.setAttribute('d', dArea);
+      if (dotEl) {
+        dotEl.setAttribute('cx', lastPoint.x);
+        dotEl.setAttribute('cy', lastPoint.y);
+      }
+    }
+
+    function pushSparklineData(key, value, prefix) {
+      if (isNaN(value)) return;
+      if (!sparklineHistories[key]) sparklineHistories[key] = [];
+      sparklineHistories[key].push(value);
+      if (sparklineHistories[key].length > 16) {
+        sparklineHistories[key].shift();
+      }
+      drawSparkline(prefix, sparklineHistories[key]);
+    }
+
+    function initAllSparklines() {
+      drawSparkline('Cpu', sparklineHistories.cpu);
+      drawSparkline('Mem', sparklineHistories.mem);
+      drawSparkline('Running', sparklineHistories.running);
+      drawSparkline('Jobs', sparklineHistories.jobs);
+      drawSparkline('Errors', sparklineHistories.errors);
+    }
+
+    function showToast(msg, isError = false) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.style.borderColor = isError ? 'var(--accent-rose)' : 'var(--accent-emerald)';
+      toast.style.display = 'block';
+      setTimeout(() => { toast.style.display = 'none'; }, 3500);
+    }
+
+    function switchMenu(menuKey) {
+      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+      const activeNav = Array.from(document.querySelectorAll('.nav-item')).find(el => el.getAttribute('onclick')?.includes("'" + menuKey + "'"));
+      if (activeNav) activeNav.classList.add('active');
+
+      document.querySelectorAll('.panel-section').forEach(el => el.classList.remove('active'));
+      const activeSec = document.getElementById('sec-' + menuKey);
+      if (activeSec) activeSec.classList.add('active');
+
+      const info = menuTitles[menuKey] || { title: 'Monitoring', desc: '' };
+      document.getElementById('pageTitle').textContent = info.title;
+      document.getElementById('pageDesc').textContent = info.desc;
+
+      if (menuKey === 'whatsapp') {
+        if (globalState?.whatsapp?.connected && !waGroupsLoaded) {
+          fetchWhatsAppGroups();
+        }
+      }
+    }
+
+    function filterErrorTab(tab) {
+      currentErrorTab = tab;
+      document.querySelectorAll('.pill-tab').forEach(el => el.classList.remove('active'));
+      if (tab === 'ALL') document.getElementById('errTabAll')?.classList.add('active');
+      if (tab === 'ACTIVE') document.getElementById('errTabActive')?.classList.add('active');
+      if (tab === 'RECOVERED') document.getElementById('errTabRecovered')?.classList.add('active');
+      renderDedicatedErrorsTable();
+    }
+
+    // Process State Update
+    function applySystemState(data) {
+      globalState = data;
+      allJobsList = data.jobs || [];
+      allActiveJobsList = data.activeJobs || [];
+      detectedErrorsList = data.stats.detectedErrors || [];
+
+      // WhatsApp Badges
+      const isWa = data.whatsapp.connected;
+      const sideWa = document.getElementById('sideWaBadge');
+      const statWaText = document.getElementById('statWaText');
+      const statWaSub = document.getElementById('statWaSub');
+      const waBigBadge = document.getElementById('waBigBadge');
+      const waQrBox = document.getElementById('waQrBox');
+      const waConnectedBox = document.getElementById('waConnectedBox');
+
+      if (isWa) {
+        if (sideWa) {
+          sideWa.className = 'badge badge-emerald';
+          sideWa.innerHTML = '<span class="pulse"></span> Online';
+        }
+
+        if (statWaText) {
+          statWaText.textContent = 'Terhubung';
+          statWaText.style.color = 'var(--accent-emerald)';
+        }
+        if (statWaSub) statWaSub.textContent = data.config.WA_TARGET_JID;
+
+        if (waBigBadge) {
+          waBigBadge.className = 'badge badge-emerald';
+          waBigBadge.innerHTML = '<span class="pulse"></span> Connected';
+        }
+        if (waQrBox) waQrBox.style.display = 'none';
+        if (waConnectedBox) waConnectedBox.style.display = 'block';
+        const accInfo = document.getElementById('waAccountInfo');
+        const targetCount = (workingRoutingList && workingRoutingList.length) ? workingRoutingList.length : 1;
+        if (accInfo) accInfo.textContent = `Bot siap broadcast alert ke ${targetCount} target penerima (Multi-Target Active).`;
+      } else if (data.whatsapp.hasPendingQr) {
+        if (sideWa) {
+          sideWa.className = 'badge badge-amber';
+          sideWa.textContent = 'Scan QR';
+        }
+
+        if (statWaText) {
+          statWaText.textContent = 'Scan QR';
+          statWaText.style.color = 'var(--accent-amber)';
+        }
+        if (statWaSub) statWaSub.textContent = 'Menunggu scan di HP';
+
+        if (waBigBadge) {
+          waBigBadge.className = 'badge badge-amber';
+          waBigBadge.textContent = 'Menunggu Scan QR WhatsApp';
+        }
+        if (waConnectedBox) waConnectedBox.style.display = 'none';
+        if (waQrBox) waQrBox.style.display = 'block';
+
+        if (currentQr !== data.whatsapp.qrCode) {
+          currentQr = data.whatsapp.qrCode;
+          const qrContainer = document.getElementById('qrCodeContainer');
+          if (qrContainer) {
+            qrContainer.innerHTML = '';
+            new QRCode(qrContainer, {
+              text: data.whatsapp.qrCode,
+              width: 220,
+              height: 220
+            });
+          }
+        }
+      } else {
+        if (sideWa) {
+          sideWa.className = 'badge badge-rose';
+          sideWa.textContent = 'Offline';
+        }
+
+        if (statWaText) {
+          statWaText.textContent = 'Terputus';
+          statWaText.style.color = 'var(--accent-rose)';
+        }
+        if (statWaSub) statWaSub.textContent = 'Memulai koneksi...';
+
+        if (waBigBadge) {
+          waBigBadge.className = 'badge badge-rose';
+          waBigBadge.textContent = 'Disconnected';
+        }
+        if (waQrBox) waQrBox.style.display = 'none';
+        if (waConnectedBox) waConnectedBox.style.display = 'none';
+      }
+
+      // CPU & Memory Usage Stats
+      const avgCpu = data.stats.avgCpuUsage || '0.0%';
+      const totalCpu = data.stats.totalCpuUsage || '0.0%';
+      const memUsage = data.stats.totalMemUsage || '0 MB';
+      const avgMem = data.stats.avgMemUsage || '0 MB';
+
+      const cpuNum = parseFloat(avgCpu);
+      const statAvgCpu = document.getElementById('statAvgCpu');
+      const badgeCpuLevel = document.getElementById('badgeCpuLevel');
+      if (statAvgCpu) statAvgCpu.textContent = avgCpu;
+      if (document.getElementById('statCpuSub')) document.getElementById('statCpuSub').textContent = `Total Load: ${totalCpu}`;
+
+      if (badgeCpuLevel) {
+        if (cpuNum >= 80) {
+          badgeCpuLevel.className = 'badge badge-rose';
+          badgeCpuLevel.textContent = 'High Load';
+        } else if (cpuNum >= 40) {
+          badgeCpuLevel.className = 'badge badge-amber';
+          badgeCpuLevel.textContent = 'Moderate';
+        } else {
+          badgeCpuLevel.className = 'badge badge-emerald';
+          badgeCpuLevel.textContent = 'Optimal';
+        }
+      }
+
+      if (document.getElementById('statMemUsage')) document.getElementById('statMemUsage').textContent = memUsage;
+      if (document.getElementById('statMemSub')) document.getElementById('statMemSub').textContent = `Rata-rata: ${avgMem} / job`;
+
+      // Stat Counts
+      const activeErrCount = data.stats.activeErrorsCount || 0;
+      const recoveredErrCount = data.stats.recoveredErrorsCount || 0;
+      const totalErrCount = detectedErrorsList.length;
+      const runningCount = data.stats.totalRunningCurrent || 0;
+
+      document.getElementById('statTotalRunning').textContent = runningCount;
+      document.getElementById('statTotalJobs').textContent = data.stats.totalJobsMonitored;
+      document.getElementById('statTotalErrors').textContent = totalErrCount;
+      document.getElementById('statErrorSub').textContent = `${activeErrCount} aktif | ${recoveredErrCount} recovered`;
+      
+      document.getElementById('activeJobsBadgeCount').textContent = runningCount + ' Running';
+      document.getElementById('detectedErrorsBadgeCount').textContent = totalErrCount + ' Insiden';
+      
+      const sideActiveBadge = document.getElementById('sideActiveBadge');
+      if (sideActiveBadge) {
+        sideActiveBadge.textContent = runningCount;
+        sideActiveBadge.style.display = runningCount > 0 ? 'inline-flex' : 'none';
+      }
+
+      const sideErrBadge = document.getElementById('sideErrorBadge');
+      if (sideErrBadge) {
+        sideErrBadge.textContent = `${totalErrCount} Error`;
+        sideErrBadge.className = activeErrCount > 0 ? 'badge badge-rose' : 'badge badge-amber';
+      }
+
+      document.getElementById('countErrAll').textContent = totalErrCount;
+      document.getElementById('countErrActive').textContent = activeErrCount;
+      document.getElementById('countErrRecovered').textContent = recoveredErrCount;
+
+      // Update Sparkline Graphs (Real-Time Live History)
+      pushSparklineData('cpu', cpuNum, 'Cpu');
+      pushSparklineData('mem', parseFloat(memUsage) || 0, 'Mem');
+      pushSparklineData('running', runningCount, 'Running');
+      pushSparklineData('jobs', data.stats.totalJobsMonitored || 0, 'Jobs');
+      pushSparklineData('errors', totalErrCount, 'Errors');
+
+      // Sync Multi-Target Routing
+      if (!isRoutingModified) {
+        if (Array.isArray(data.config.WA_TARGET_ROUTING) && data.config.WA_TARGET_ROUTING.length > 0) {
+          workingRoutingList = JSON.parse(JSON.stringify(data.config.WA_TARGET_ROUTING));
+        } else if (data.config.WA_TARGET_JID) {
+          const isGrp = data.config.WA_TARGET_JID.includes('@g.us');
+          workingRoutingList = [{
+            id: 'target-primary',
+            type: isGrp ? 'group' : 'private',
+            name: isGrp ? 'Grup WhatsApp' : 'Admin Utama (Pribadi)',
+            target: formatJidClient(data.config.WA_TARGET_JID),
+            enabled: true
+          }];
+        } else {
+          workingRoutingList = [];
+        }
+        renderTargetRoutingList();
+      }
+
+      // Render Sub-tables
+      renderActiveJobsTable();
+      renderDetectedErrorsTable();
+      renderDedicatedErrorsTable();
+
+      // Check WhatsApp Target banner status
+      updateWaBannerStatus(data);
+
+      // Render Server Grid
+      const srvGrid = document.getElementById('dashboardServerGrid');
+      srvGrid.innerHTML = data.config.TARGET_SERVERS.map(srv => {
+        const sStat = data.stats.serverStatus[srv.name] || {};
+        const isOnline = sStat.online === true;
+        const running = sStat.runningCount || 0;
+        return `
+          <div class="server-box">
+            <div class="server-title-row">
+              <span class="server-name-txt">${srv.name}</span>
+              <span class="badge ${isOnline ? 'badge-emerald' : 'badge-rose'}">
+                ${isOnline ? '<span class="pulse"></span> ONLINE (' + (sStat.totalJobs || 0) + ' JOBS)' : 'OFFLINE'}
+              </span>
+            </div>
+            <div style="font-size: 12px; color: var(--text-muted); word-break: break-all; margin-bottom: 12px;">
+              ${srv.baseUrl}
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 12px; border-top: 1px solid var(--border-color); padding-top: 10px;">
+              <span style="color: var(--text-secondary);">Active: <strong style="color: var(--accent-cyan);">${running} Running</strong></span>
+              <span style="color: var(--text-secondary);">Latency: <strong>${sStat.latencyMs ? sStat.latencyMs + 'ms' : '-'}</strong></span>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      renderAntiSpamTable();
+      renderJobsTable();
+      renderConfigServerTable();
+      renderSystemLogs(data.stats.systemLogs);
+
+      if (!document.getElementById('cfgWaTarget')?.matches(':focus')) {
+        document.getElementById('cfgWaTarget').value = data.config.WA_TARGET_JID || '';
+        if (document.getElementById('waQuickTargetInput') && !document.getElementById('waQuickTargetInput').matches(':focus')) {
+          document.getElementById('waQuickTargetInput').value = data.config.WA_TARGET_JID || '';
+        }
+        document.getElementById('cfgCron').value = data.config.CRON_SCHEDULE || '*/10 * * * * *';
+        document.getElementById('cfgSsl').value = String(data.config.IGNORE_SSL_ERRORS);
+        document.getElementById('cfgTemplate').value = data.config.ALERT_TEMPLATE || '';
+
+        if (document.getElementById('cfgAlertDelay')) {
+          document.getElementById('cfgAlertDelay').value = String(data.config.ALERT_DELAY_MINUTES || 0);
+        }
+        if (document.getElementById('cfgSummaryEnabled')) {
+          const isEnabled = data.config.SUMMARY_ENABLED !== false;
+          document.getElementById('cfgSummaryEnabled').checked = isEnabled;
+          onSummaryToggleChange(isEnabled);
+        }
+        if (document.getElementById('cfgSummaryInterval')) {
+          document.getElementById('cfgSummaryInterval').value = String(data.config.SUMMARY_INTERVAL_MINUTES || 30);
+        }
+        if (document.getElementById('cfgSummaryOnlyIfError')) {
+          document.getElementById('cfgSummaryOnlyIfError').checked = data.config.SUMMARY_ONLY_IF_ERROR !== false;
+        }
+        if (document.getElementById('cfgSummaryTemplate') && !document.getElementById('cfgSummaryTemplate').matches(':focus')) {
+          document.getElementById('cfgSummaryTemplate').value = data.config.SUMMARY_TEMPLATE || '';
+        }
+      }
+    }
+
+    function updateWaBannerStatus(data) {
+      const banner = document.getElementById('waTargetAlertBanner');
+      const btnUseBot = document.getElementById('btnUseConnectedBot');
+      if (!banner) return;
+
+      const targetJid = data.config?.WA_TARGET_JID || '';
+      const isDummy = targetJid.includes('1234567890') || !targetJid;
+      const isConnected = data.whatsapp?.connected;
+
+      if (!isConnected) {
+        banner.style.display = 'flex';
+        document.getElementById('waBannerTitle').textContent = 'WhatsApp Bot Belum Terhubung';
+        document.getElementById('waBannerDesc').textContent = 'Silakan masuk ke tab WhatsApp Bot dan scan QR code agar bot dapat mengirimkan alert kegagalan job.';
+        if (btnUseBot) btnUseBot.style.display = 'none';
+      } else if (isDummy) {
+        banner.style.display = 'flex';
+        document.getElementById('waBannerTitle').textContent = 'Nomor WhatsApp Penerima Alert Masih Nomor Contoh!';
+        document.getElementById('waBannerDesc').innerHTML = `Target saat ini: <code>${targetJid}</code>. Masukkan nomor WhatsApp asli Anda di bawah atau klik tombol gunakan nomor bot agar pesan notifikasi masuk.`;
+        
+        if (data.whatsapp?.user?.id && btnUseBot) {
+          const rawNum = data.whatsapp.user.id.split(':')[0];
+          btnUseBot.style.display = 'inline-flex';
+          btnUseBot.textContent = `Gunakan No. Ini (${rawNum})`;
+        }
+      } else {
+        banner.style.display = 'none';
+      }
+    }
+
+    function calculateJobPercent(j) {
+      if (typeof j.progressPercent === 'number' && j.progressPercent > 0) {
+        return Math.min(100, Math.max(0, j.progressPercent));
+      }
+      if (typeof j.progress === 'number') {
+        return Math.min(100, Math.max(0, Math.round(j.progress <= 1 ? j.progress * 100 : j.progress)));
+      }
+      if (j.estimatedDuration && j.estimatedDuration > 0) {
+        return Math.min(99, Math.max(5, Math.round((j.elapsedSec / j.estimatedDuration) * 100)));
+      }
+      const sec = j.elapsedSec || 0;
+      return Math.min(96, Math.max(6, Math.round(100 * (1 - Math.exp(-sec / 45)))));
+    }
+
+    // Real-Time 1-Second Ticker for Active Jobs
+    setInterval(() => {
+      if (allActiveJobsList.length > 0) {
+        const nowSec = Date.now() / 1000;
+        allActiveJobsList.forEach(j => {
+          if (j.timeStart) {
+            const elapsedSec = Math.max(0, Math.floor(nowSec - j.timeStart));
+            j.elapsedSec = elapsedSec;
+            let formatted = `${elapsedSec}s`;
+            if (elapsedSec >= 60) {
+              const m = Math.floor(elapsedSec / 60);
+              const s = elapsedSec % 60;
+              formatted = `${m}m ${s}s`;
+            }
+            j.elapsedFormatted = formatted;
+            
+            const pct = calculateJobPercent(j);
+            j.currentPercent = pct;
+            
+            // Update live timers in DOM directly
+            const el1 = document.getElementById('liveTimer_dash_' + j.id);
+            if (el1) el1.textContent = formatted;
+            const el2 = document.getElementById('liveTimer_full_' + j.id);
+            if (el2) el2.textContent = formatted;
+
+            // Update live percentage and progress bar fill
+            const pctEl1 = document.getElementById('livePct_dash_' + j.id);
+            if (pctEl1) pctEl1.textContent = pct + '%';
+            const barEl1 = document.getElementById('liveBar_dash_' + j.id);
+            if (barEl1) barEl1.style.width = pct + '%';
+
+            const pctEl2 = document.getElementById('livePct_full_' + j.id);
+            if (pctEl2) pctEl2.textContent = pct + '%';
+            const barEl2 = document.getElementById('liveBar_full_' + j.id);
+            if (barEl2) barEl2.style.width = pct + '%';
+          }
+        });
+      }
+    }, 1000);
+
+    function renderActiveJobsTable() {
+      const dashBody = document.getElementById('dashActiveJobsBody');
+      const fullBody = document.getElementById('fullActiveJobsBody');
+
+      if (!dashBody) return;
+
+      if (allActiveJobsList.length === 0) {
+        dashBody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: var(--text-muted); padding: 24px;">Tidak ada job yang sedang berjalan saat ini (Semua Idle).</td></tr>';
+        if (fullBody) fullBody.innerHTML = '<tr><td colspan="10" style="text-align: center; color: var(--text-muted); padding: 24px;">Tidak ada job yang sedang berjalan saat ini.</td></tr>';
+        return;
+      }
+
+      dashBody.innerHTML = allActiveJobsList.map(j => {
+        const pct = calculateJobPercent(j);
+        return `
+        <tr>
+          <td><code style="color: var(--accent-blue); font-size: 11.5px;">${j.id}</code></td>
+          <td><span class="badge badge-blue">${j.serverName}</span></td>
+          <td><strong style="color: #0f172a;">${j.title}</strong></td>
+          <td><span style="color: var(--text-secondary); font-size: 12px;">${j.category}</span></td>
+          <td><span class="badge badge-blue">${j.hostname}</span></td>
+          <td><span class="live-timer-badge" id="liveTimer_dash_${j.id}">${j.elapsedFormatted}</span></td>
+          <td>
+            <div class="progress-container">
+              <div class="progress-meta-row">
+                <span class="progress-pct-badge" id="livePct_dash_${j.id}">${pct}%</span>
+                <span class="progress-resource-text">CPU: ${j.cpu} | ${j.mem}</span>
+              </div>
+              <div class="progress-track">
+                <div class="progress-bar-fill" id="liveBar_dash_${j.id}" style="width: ${pct}%;"></div>
+              </div>
+            </div>
+          </td>
+          <td><span class="badge badge-blue"><span class="pulse"></span> RUNNING</span></td>
+        </tr>
+      `}).join('');
+
+      if (fullBody) {
+        fullBody.innerHTML = allActiveJobsList.map(j => {
+          const pct = calculateJobPercent(j);
+          return `
+          <tr>
+            <td><code style="color: var(--accent-blue);">${j.id}</code></td>
+            <td><span class="badge badge-blue">${j.serverName}</span></td>
+            <td><strong style="color: #0f172a;">${j.title}</strong></td>
+            <td>${j.category}</td>
+            <td>${j.hostname}</td>
+            <td><span class="live-timer-badge" id="liveTimer_full_${j.id}">${j.elapsedFormatted}</span></td>
+            <td>
+              <div class="progress-container">
+                <div class="progress-meta-row">
+                  <span class="progress-pct-badge" id="livePct_full_${j.id}">${pct}%</span>
+                  <span class="progress-resource-text">${j.cpu} / ${j.mem}</span>
+                </div>
+                <div class="progress-track">
+                  <div class="progress-bar-fill" id="liveBar_full_${j.id}" style="width: ${pct}%;"></div>
+                </div>
+              </div>
+            </td>
+            <td><code>${j.pid}</code></td>
+            <td style="font-size: 11px; color: var(--text-muted); max-width: 200px; word-break: break-word;">${j.source}</td>
+            <td><span class="badge badge-blue"><span class="pulse"></span> RUNNING</span></td>
+          </tr>
+        `}).join('');
+      }
+    }
+
+    function renderDetectedErrorsTable() {
+      const errBody = document.getElementById('detectedErrorsBody');
+      if (!errBody) return;
+
+      if (detectedErrorsList.length === 0) {
+        errBody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: var(--text-muted); padding: 24px;">Belum ada job gagal terdeteksi. Semua job berjalan normal.</td></tr>';
+        return;
+      }
+
+      errBody.innerHTML = detectedErrorsList.slice(0, 10).map(err => {
+        const isRecovered = err.resolved === true;
+        return `
+          <tr style="background: ${isRecovered ? '#f0fdf4' : '#fef2f2'};">
+            <td><span style="color: var(--text-primary); font-size: 12px; font-weight: 600;">${err.timeStr}</span></td>
+            <td><span class="badge badge-blue">${err.serverName}</span></td>
+            <td><strong style="color: ${isRecovered ? '#15803d' : '#b91c1c'};">${err.jobName}</strong></td>
+            <td><span style="color: var(--text-secondary); font-size: 12px;">${err.category}</span></td>
+            <td><span class="badge ${isRecovered ? 'badge-amber' : 'badge-rose'}">Code ${err.code}</span></td>
+            <td style="color: ${isRecovered ? '#166534' : '#991b1b'}; font-size: 12px; max-width: 320px; word-break: break-word;">${err.description}</td>
+            <td>
+              <span class="badge ${isRecovered ? 'badge-emerald' : 'badge-rose'}">
+                ${isRecovered ? '🟢 RECOVERED' : '<span class="pulse"></span> FAILED'}
+              </span>
+            </td>
+            <td style="text-align: center;">
+              <button class="btn btn-primary" style="padding: 4px 10px; font-size: 11px; white-space: nowrap; gap: 4px;" onclick="sendSingleErrorAlert('${err.id}')" title="Kirim alert error ini ke nomor WhatsApp">
+                <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+                Kirim WA
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function renderDedicatedErrorsTable() {
+      const tbody = document.getElementById('dedicatedErrorsTableBody');
+      if (!tbody) return;
+
+      const q = (document.getElementById('errSearchInput')?.value || '').toLowerCase();
+      const srvF = document.getElementById('errServerFilter')?.value || 'ALL';
+
+      const filtered = detectedErrorsList.filter(err => {
+        const matchesQuery = err.jobName.toLowerCase().includes(q) || 
+                             err.serverName.toLowerCase().includes(q) || 
+                             (err.category && err.category.toLowerCase().includes(q)) || 
+                             (err.description && err.description.toLowerCase().includes(q));
+        let matchesServer = srvF === 'ALL' || err.serverName === srvF;
+        let matchesTab = true;
+        if (currentErrorTab === 'ACTIVE') matchesTab = !err.resolved;
+        if (currentErrorTab === 'RECOVERED') matchesTab = err.resolved;
+
+        return matchesQuery && matchesServer && matchesTab;
+      });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: var(--text-muted); padding: 24px;">Tidak ada riwayat error yang sesuai dengan filter.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(err => {
+        const isRecovered = err.resolved === true;
+        return `
+          <tr style="background: ${isRecovered ? '#f0fdf4' : '#fef2f2'};">
+            <td><span style="color: var(--text-primary); font-size: 12px; font-weight: 600;">${err.timeStr}</span></td>
+            <td><span class="badge badge-blue">${err.serverName}</span></td>
+            <td><strong style="color: ${isRecovered ? '#15803d' : '#b91c1c'}; font-size: 13px;">${err.jobName}</strong></td>
+            <td><span style="color: var(--text-secondary); font-size: 12px;">${err.category}</span></td>
+            <td><span class="badge ${isRecovered ? 'badge-amber' : 'badge-rose'}">Code ${err.code}</span></td>
+            <td style="color: ${isRecovered ? '#166534' : '#991b1b'}; font-size: 12px; max-width: 340px; word-break: break-word;">${err.description}</td>
+            <td>
+              <span class="badge ${isRecovered ? 'badge-emerald' : 'badge-rose'}">
+                ${isRecovered ? '🟢 RECOVERED' : '<span class="pulse"></span> ACTIVE ERROR'}
+              </span>
+            </td>
+            <td style="text-align: center;">
+              <button class="btn btn-primary" style="padding: 4px 10px; font-size: 11px; white-space: nowrap; gap: 4px;" onclick="sendSingleErrorAlert('${err.id}')" title="Kirim alert error ini ke nomor WhatsApp">
+                <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+                Kirim WA
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function renderJobsTable() {
+      const q = (document.getElementById('jobSearchInput')?.value || '').toLowerCase();
+      const statusF = document.getElementById('jobStatusFilter')?.value || 'ALL';
+      const tbody = document.getElementById('allJobsTableBody');
+      if (!tbody) return;
+
+      const filtered = allJobsList.filter(job => {
+        const matchesQuery = job.name.toLowerCase().includes(q) || job.serverName.toLowerCase().includes(q) || (job.category && job.category.toLowerCase().includes(q));
+        let matchesStatus = true;
+        if (statusF === 'RUNNING') matchesStatus = job.status === 'Running';
+        if (statusF === 'ACTIVE_ERROR') matchesStatus = job.isError;
+        if (statusF === 'PAST_ERROR') matchesStatus = job.hadPastError || job.isError;
+        if (statusF === 'SUCCESS') matchesStatus = job.status === 'Success' || job.status === 'Recovered';
+        return matchesQuery && matchesStatus;
+      });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 24px;">Tidak ada job yang sesuai dengan filter.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = filtered.slice(0, 200).map(j => {
+        let badgeClass = 'badge-emerald';
+        let badgeText = j.status;
+
+        if (j.status === 'Running') {
+          badgeClass = 'badge-blue';
+          badgeText = '<span class="pulse"></span> RUNNING';
+        } else if (j.isError) {
+          badgeClass = 'badge-rose';
+          badgeText = `<span class="pulse"></span> ${j.status}`;
+        } else if (j.hadPastError) {
+          badgeClass = 'badge-amber';
+          badgeText = '🟡 Recovered';
+        } else if (j.status === 'Idle') {
+          badgeClass = 'badge-blue';
+        }
+
+        return `
+          <tr>
+            <td><span class="badge badge-blue">${j.serverName}</span></td>
+            <td><strong style="color: #0f172a;">${j.name}</strong></td>
+            <td><span style="color: var(--text-secondary); font-size: 12px;">${j.category}</span></td>
+            <td>
+              <span class="badge ${badgeClass}">
+                ${badgeText}
+              </span>
+            </td>
+            <td>${j.lastRun}</td>
+            <td>${j.duration}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    async function renderAntiSpamTable() {
+      try {
+        const res = await fetch('/api/logs');
+        const data = await res.json();
+        const tbody = document.getElementById('antiSpamTableBody');
+        if (!tbody) return;
+
+        if (data.alerts.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 24px;">Belum ada log anti-spam.</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = data.alerts.map(a => {
+          const key = typeof a === 'string' ? a : a.key;
+          const sName = a.serverName || key.split('_')[0] || '-';
+          const jName = a.jobName || key.split('_')[1] || '-';
+          const status = a.status || 'ERROR';
+          const date = a.date ? new Date(a.date).toLocaleString('id-ID') : '-';
+          return `
+            <tr>
+              <td>${date}</td>
+              <td><strong style="color: #0f172a;">${sName}</strong></td>
+              <td>${jName}</td>
+              <td><span class="badge badge-rose">${status}</span></td>
+              <td><code style="font-size: 11px;">${key}</code></td>
+            </tr>
+          `;
+        }).join('');
+      } catch (e) {}
+    }
+
+    function renderConfigServerTable() {
+      const tbody = document.getElementById('serversConfigTableBody');
+      if (!tbody || !globalState) return;
+
+      tbody.innerHTML = globalState.config.TARGET_SERVERS.map((srv, idx) => {
+        const sStat = globalState.stats.serverStatus[srv.name] || {};
+        const isOnline = sStat.online === true;
+        return `
+          <tr>
+            <td><strong style="color: #0f172a;">${srv.name}</strong></td>
+            <td><a href="${srv.baseUrl}" target="_blank" style="color: var(--accent-blue); text-decoration: none; font-weight: 500;">${srv.baseUrl}</a></td>
+            <td>
+              <input type="password" value="${srv.apiKey || ''}" id="apiKeyInput_${idx}" class="form-control" style="width: 220px; font-size: 12px;" placeholder="Masukkan API Key...">
+            </td>
+            <td>
+              <span class="badge ${isOnline ? 'badge-emerald' : 'badge-rose'}">
+                ${isOnline ? 'ONLINE (' + (sStat.totalJobs || 0) + ' Jobs)' : (sStat.lastError || 'Offline')}
+              </span>
+            </td>
+            <td>
+              <button class="btn btn-secondary" style="padding: 5px 12px; font-size: 11px;" onclick="updateServerKey(${idx})">
+                Simpan Key
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function renderSystemLogs(logs) {
+      const box = document.getElementById('systemLogsTerminal');
+      if (!box || !logs) return;
+
+      box.innerHTML = logs.map(l => `
+        <div class="log-line">
+          <span class="log-time">[${l.time}]</span>
+          <span class="log-${l.type}">${l.message}</span>
+        </div>
+      `).join('');
+    }
+
+    async function triggerCheck() {
+      try {
+        await fetch('/api/check-now', { method: 'POST' });
+        showToast('Deep scan job scheduler sedang berjalan...');
+      } catch (e) {
+        showToast('Gagal memicu pengecekan: ' + e.message, true);
+      }
+    }
+
+    async function sendSingleErrorAlert(errorId) {
+      const err = detectedErrorsList.find(e => e.id === errorId);
+      const title = err ? `[${err.serverName}] ${err.jobName}` : 'Job';
+      showToast(`Mengirim notifikasi alert untuk ${title}...`);
+
+      try {
+        const res = await fetch('/api/errors/send-alert', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ errorId })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast('✅ ' + data.message);
+        } else {
+          showToast('❌ ' + data.message, true);
+        }
+      } catch (e) {
+        showToast('Gagal mengirim: ' + e.message, true);
+      }
+    }
+
+    async function sendAllActiveErrorsAlert() {
+      if (!confirm('Kirim seluruh notifikasi job error yang terdeteksi ke nomor WhatsApp tujuan?')) return;
+      showToast('Memulai pengiriman batch notifikasi error ke WhatsApp...');
+
+      try {
+        const res = await fetch('/api/errors/send-all-active', { method: 'POST' });
+        const data = await res.json();
+        if (data.success) {
+          showToast('🚀 ' + data.message);
+        } else {
+          showToast('❌ ' + data.message, true);
+        }
+      } catch (e) {
+        showToast('Gagal mengirim: ' + e.message, true);
+      }
+    }
+
+    // ==========================================
+    // WHATSAPP MULTI-TARGET ROUTING & GROUP PICKER
+    // ==========================================
+    function formatJidClient(input) {
+      if (!input) return '';
+      let str = String(input).trim();
+      if (str.includes('@')) return str;
+      str = str.replace(/[^0-9]/g, '');
+      if (str.startsWith('0')) {
+        str = '62' + str.substring(1);
+      }
+      return `${str}@s.whatsapp.net`;
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function renderTargetRoutingList() {
+      const container = document.getElementById('targetListContainer');
+      const countBadge = document.getElementById('targetListCountBadge');
+      if (!container) return;
+
+      if (!workingRoutingList || workingRoutingList.length === 0) {
+        if (countBadge) countBadge.textContent = '0 Target';
+        container.innerHTML = `
+          <div style="text-align: center; color: var(--text-muted); padding: 32px 14px; font-size: 12px; border: 1px dashed var(--border-color); border-radius: var(--radius-md); background: #f8fafc;">
+            <i class="fa-solid fa-route" style="font-size: 22px; color: #94a3b8; margin-bottom: 8px; display: block;"></i>
+            Belum ada target penerima yang dikonfigurasi.<br>
+            Tambahkan nomor WhatsApp pribadi atau pilih grup WA di panel kanan.
+          </div>
+        `;
+        return;
+      }
+
+      if (countBadge) countBadge.textContent = `${workingRoutingList.length} Target`;
+
+      container.innerHTML = workingRoutingList.map((item, idx) => {
+        const isGroup = item.type === 'group' || (item.target && item.target.includes('@g.us'));
+        const iconClass = isGroup ? 'fa-solid fa-users' : 'fa-solid fa-user';
+        const typeClass = isGroup ? 'group' : 'private';
+        const displayName = item.name || (isGroup ? 'Grup WhatsApp' : 'Chat Pribadi');
+        const targetDisplay = item.target || item.jid || '-';
+
+        return `
+          <div class="routing-target-card">
+            <div style="display: flex; align-items: center; gap: 12px; min-width: 0; flex: 1;">
+              <div class="target-icon-box ${typeClass}">
+                <i class="${iconClass}"></i>
+              </div>
+              <div style="min-width: 0; flex: 1;">
+                <p class="target-title-text" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${escapeHtml(displayName)}</p>
+                <p class="target-jid-text">${escapeHtml(targetDisplay)}</p>
+              </div>
+            </div>
+            <button onclick="removeTargetRouting(${idx})" class="target-delete-btn" title="Hapus target ini">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function addTargetRouting() {
+      const type = document.getElementById('targetCategory').value;
+      const labelInput = document.getElementById('targetLabelInput');
+      const targetInput = document.getElementById('targetInput');
+      
+      const rawTarget = targetInput.value.trim();
+      if (!rawTarget) {
+        showToast('Mohon masukkan nomor WhatsApp atau ID Grup!', true);
+        return;
+      }
+
+      const formattedTarget = formatJidClient(rawTarget);
+      let name = labelInput.value.trim();
+      if (!name) {
+        if (type === 'group' || formattedTarget.includes('@g.us')) {
+          name = `[Group] ${formattedTarget.split('@')[0]}`;
+        } else {
+          name = `Chat Pribadi (${rawTarget.replace(/[^0-9]/g, '')})`;
+        }
+      }
+
+      // Check duplicates
+      const exists = workingRoutingList.some(t => (t.target || t.jid) === formattedTarget);
+      if (exists) {
+        showToast('Target ini sudah ada di dalam daftar penerima!', true);
+        return;
+      }
+
+      workingRoutingList.push({
+        id: 'tgt-' + Date.now() + Math.random().toString(36).substr(2, 4),
+        type,
+        name,
+        target: formattedTarget,
+        enabled: true
+      });
+
+      isRoutingModified = true;
+      renderTargetRoutingList();
+
+      labelInput.value = '';
+      targetInput.value = '';
+      showToast(`Target "${name}" ditambahkan. Klik "Simpan Perubahan Target" untuk menerapkan.`);
+    }
+
+    function removeTargetRouting(index) {
+      if (index >= 0 && index < workingRoutingList.length) {
+        const removed = workingRoutingList.splice(index, 1);
+        isRoutingModified = true;
+        renderTargetRoutingList();
+        showToast(`Target "${removed[0]?.name || 'Penerima'}" dihapus.`);
+      }
+    }
+
+    function addPresetGroup(name, id) {
+      if (!id) return;
+      const formattedTarget = formatJidClient(id);
+      
+      const exists = workingRoutingList.some(t => (t.target || t.jid) === formattedTarget);
+      if (exists) {
+        showToast('Grup ini sudah terdaftar di target routing!', true);
+        return;
+      }
+
+      const cleanName = name.startsWith('[Group]') ? name : `[Group] ${name}`;
+      workingRoutingList.push({
+        id: 'grp-' + Date.now() + Math.random().toString(36).substr(2, 4),
+        type: 'group',
+        name: cleanName,
+        target: formattedTarget,
+        enabled: true
+      });
+
+      isRoutingModified = true;
+      renderTargetRoutingList();
+      showToast(`✅ Grup "${name}" ditambahkan ke routing! Klik "Simpan Perubahan Target" untuk menerapkan.`);
+    }
+
+    async function saveTargetRouting() {
+      if (workingRoutingList.length === 0) {
+        if (!confirm('Daftar target kosong. Yakin ingin menghapus seluruh target alert?')) return;
+      }
+
+      showToast('Menyimpan perubahan aturan target routing...');
+      try {
+        const primaryTarget = workingRoutingList[0] ? (workingRoutingList[0].target || workingRoutingList[0].jid) : '';
+        const payload = {
+          WA_TARGET_ROUTING: workingRoutingList,
+          WA_TARGET_JID: primaryTarget
+        };
+
+        const res = await fetch('/api/config', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          isRoutingModified = false;
+          showToast('✅ Target routing berhasil disimpan & diterapkan!');
+          
+          const toastEl = document.getElementById('routingStatusToast');
+          if (toastEl) {
+            toastEl.style.display = 'inline-flex';
+            setTimeout(() => { toastEl.style.display = 'none'; }, 3500);
+          }
+        } else {
+          showToast('❌ Gagal menyimpan: ' + data.message, true);
+        }
+      } catch (err) {
+        showToast('Gagal menyimpan: ' + err.message, true);
+      }
+    }
+
+    let waGroupsCache = [];
+
+    function onGroupSearchInput(val) {
+      const clearBtn = document.getElementById('waGroupSearchClearBtn');
+      if (clearBtn) {
+        clearBtn.style.display = val.trim() ? 'block' : 'none';
+      }
+      filterAndRenderWhatsAppGroups();
+    }
+
+    function clearGroupSearch() {
+      const input = document.getElementById('waGroupSearchInput');
+      const clearBtn = document.getElementById('waGroupSearchClearBtn');
+      if (input) {
+        input.value = '';
+        input.focus();
+      }
+      if (clearBtn) clearBtn.style.display = 'none';
+      filterAndRenderWhatsAppGroups();
+    }
+
+    function filterAndRenderWhatsAppGroups() {
+      const container = document.getElementById('waGroupListContainer');
+      const searchInput = document.getElementById('waGroupSearchInput');
+      const countBadge = document.getElementById('waGroupTotalCountBadge');
+      if (!container) return;
+
+      const q = (searchInput?.value || '').trim().toLowerCase();
+
+      if (!waGroupsCache || waGroupsCache.length === 0) {
+        container.innerHTML = `
+          <div style="text-align: center; color: var(--text-muted); padding: 24px 12px; font-size: 12px;">
+            Belum ada grup yang termuat. Klik tombol <strong>Sync Data Grup WA</strong> di atas.
+          </div>
+        `;
+        if (countBadge) countBadge.textContent = '0 Grup';
+        return;
+      }
+
+      const filtered = waGroupsCache.filter(g => {
+        const matchSubject = (g.subject || '').toLowerCase().includes(q);
+        const matchId = (g.id || '').toLowerCase().includes(q);
+        return matchSubject || matchId;
+      });
+
+      if (countBadge) {
+        if (q) {
+          countBadge.textContent = `${filtered.length} / ${waGroupsCache.length} Grup`;
+        } else {
+          countBadge.textContent = `${waGroupsCache.length} Grup`;
+        }
+      }
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div style="text-align: center; color: var(--text-muted); padding: 28px 12px; font-size: 12px; background: #f8fafc; border-radius: var(--radius-sm); border: 1px dashed var(--border-color);">
+            <i class="fa-solid fa-magnifying-glass" style="font-size: 18px; color: #94a3b8; margin-bottom: 6px; display: block;"></i>
+            Tidak ada grup yang cocok dengan kata kunci "<strong>${escapeHtml(q)}</strong>".
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map(g => {
+        const escName = escapeHtml(g.subject);
+        const safeJsName = g.subject.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+        return `
+          <div class="group-picker-card">
+            <div style="min-width: 0; flex: 1;">
+              <p class="group-picker-title">${escName}</p>
+              <p class="group-picker-sub">${escapeHtml(g.id)} (${g.size} anggota)</p>
+            </div>
+            <button onclick="addPresetGroup('${safeJsName}', '${g.id}')" class="group-add-btn">
+              + Add
+            </button>
+          </div>
+        `;
+      }).join('');
+    }
+
+    async function fetchWhatsAppGroups() {
+      const container = document.getElementById('waGroupListContainer');
+      const countBadge = document.getElementById('waGroupTotalCountBadge');
+      if (!container) return;
+
+      container.innerHTML = `
+        <div style="text-align: center; color: var(--text-muted); padding: 24px 12px; font-size: 12px;">
+          <i class="fa-solid fa-rotate fa-spin" style="color: #10b981; margin-right: 6px;"></i>
+          Mengambil data grup dari WhatsApp...
+        </div>
+      `;
+
+      try {
+        const res = await fetch('/api/whatsapp/groups');
+        const data = await res.json();
+
+        if (!data.success) {
+          container.innerHTML = `
+            <div style="text-align: center; color: var(--text-muted); padding: 20px 12px; font-size: 12px;">
+              <p style="color: #fda4af; margin-bottom: 6px;">⚠️ ${escapeHtml(data.message || 'Gagal memuat grup')}</p>
+              <p style="font-size: 11px;">Pastikan WhatsApp Bot berstatus <strong>Online</strong>.</p>
+            </div>
+          `;
+          return;
+        }
+
+        waGroupsLoaded = true;
+        waGroupsCache = data.groups || [];
+
+        if (waGroupsCache.length === 0) {
+          container.innerHTML = `
+            <div style="text-align: center; color: var(--text-muted); padding: 24px 12px; font-size: 12px;">
+              Akun WhatsApp Bot belum bergabung dengan grup manapun.
+            </div>
+          `;
+          if (countBadge) countBadge.textContent = '0 Grup';
+          return;
+        }
+
+        filterAndRenderWhatsAppGroups();
+        showToast(`Ditemukan ${waGroupsCache.length} grup WhatsApp yang diikuti bot.`);
+      } catch (err) {
+        container.innerHTML = `
+          <div style="text-align: center; color: #fb7185; padding: 20px 12px; font-size: 12px;">
+            Gagal mengambil grup: ${escapeHtml(err.message)}
+          </div>
+        `;
+      }
+    }
+
+    async function sendBroadcastTest() {
+      showToast('Mengirim uji coba broadcast ke seluruh target aktif...');
+      try {
+        const res = await fetch('/api/test-whatsapp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({})
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast('🚀 ' + data.message);
+        } else {
+          showToast('❌ ' + data.message, true);
+        }
+      } catch (err) {
+        showToast('Gagal mengirim broadcast: ' + err.message, true);
+      }
+    }
+
+    async function saveWaTargetFromBanner() {
+      const val = document.getElementById('bannerWaInput').value.trim();
+      if (!val) {
+        showToast('Silakan masukkan nomor WhatsApp Anda!', true);
+        return;
+      }
+      showToast('Menyimpan nomor WhatsApp tujuan...');
+      const formatted = formatJidClient(val);
+      const newRouting = [
+        {
+          id: 'target-primary',
+          type: formatted.includes('@g.us') ? 'group' : 'private',
+          name: formatted.includes('@g.us') ? 'Grup WhatsApp' : 'Admin Utama (Pribadi)',
+          target: formatted,
+          enabled: true
+        }
+      ];
+      workingRoutingList = newRouting;
+      isRoutingModified = false;
+      await saveConfigApi({ WA_TARGET_JID: formatted, WA_TARGET_ROUTING: newRouting });
+      await sendTestAlert(formatted);
+    }
+
+    async function useConnectedBotNumber() {
+      if (!globalState?.whatsapp?.user?.id) {
+        showToast('Nomor bot belum terdeteksi.', true);
+        return;
+      }
+      const rawNum = globalState.whatsapp.user.id.split(':')[0];
+      const jid = `${rawNum}@s.whatsapp.net`;
+      showToast(`Mengatur target ke nomor bot (${rawNum})...`);
+      const newRouting = [
+        {
+          id: 'target-primary',
+          type: 'private',
+          name: `Bot WhatsApp (${rawNum})`,
+          target: jid,
+          enabled: true
+        }
+      ];
+      workingRoutingList = newRouting;
+      isRoutingModified = false;
+      await saveConfigApi({ WA_TARGET_JID: jid, WA_TARGET_ROUTING: newRouting });
+      await sendTestAlert(jid);
+    }
+
+    async function sendTestAlert(targetNumber = null) {
+      try {
+        showToast('Mengirim pesan WhatsApp test...');
+        const res = await fetch('/api/test-whatsapp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ targetNumber })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast('✅ ' + data.message);
+        } else {
+          showToast('❌ ' + data.message, true);
+        }
+      } catch (e) {
+        showToast('Gagal mengirim: ' + e.message, true);
+      }
+    }
+
+    async function resetWaSession() {
+      if (!confirm('Yakin ingin mereset sesi WhatsApp dan memindai ulang QR Code?')) return;
+      try {
+        showToast('Mereset sesi WhatsApp...');
+        const res = await fetch('/api/whatsapp/reset', { method: 'POST' });
+        const data = await res.json();
+        if (data.success) {
+          showToast('✅ Sesi direset. Silakan scan QR code baru.');
+        } else {
+          showToast('❌ Gagal: ' + data.message, true);
+        }
+      } catch (e) {
+        showToast('Gagal mereset: ' + e.message, true);
+      }
+    }
+
+    async function clearAlertLogs() {
+      if (!confirm('Yakin ingin mengosongkan cache alert anti-spam?')) return;
+      try {
+        await fetch('/api/logs/clear', { method: 'POST' });
+        showToast('Cache log anti-spam berhasil dibersihkan');
+      } catch (e) {
+        showToast('Gagal: ' + e.message, true);
+      }
+    }
+
+    async function clearErrorHistory() {
+      if (!confirm('Yakin ingin menghapus seluruh log riwayat error?')) return;
+      try {
+        await fetch('/api/errors/clear', { method: 'POST' });
+        showToast('Riwayat error berhasil dibersihkan');
+      } catch (e) {
+        showToast('Gagal: ' + e.message, true);
+      }
+    }
+
+    async function updateServerKey(idx) {
+      const newKey = document.getElementById('apiKeyInput_' + idx).value.trim();
+      const servers = [...globalState.config.TARGET_SERVERS];
+      servers[idx].apiKey = newKey;
+      await saveConfigApi({ TARGET_SERVERS: servers });
+      triggerCheck();
+    }
+
+    async function saveConfigApi(payload) {
+      try {
+        const res = await fetch('/api/config', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast('Pengaturan berhasil disimpan!');
+        }
+      } catch (e) {
+        showToast('Gagal menyimpan: ' + e.message, true);
+      }
+    }
+
+    function insertTagToField(targetId, tagText) {
+      const textarea = document.getElementById(targetId);
+      if (!textarea) return;
+      const startPos = textarea.selectionStart;
+      const endPos = textarea.selectionEnd;
+      const val = textarea.value;
+      
+      textarea.value = val.substring(0, startPos) + tagText + val.substring(endPos, val.length);
+      textarea.focus();
+      textarea.selectionStart = startPos + tagText.length;
+      textarea.selectionEnd = startPos + tagText.length;
+      showToast(`Variabel ${tagText} disisipkan!`);
+    }
+
+    function onSummaryToggleChange(isChecked) {
+      const txt = document.getElementById('summarySwitchText');
+      if (txt) {
+        txt.textContent = isChecked ? 'Aktif' : 'Nonaktif';
+        txt.style.color = isChecked ? '#34d399' : '#94a3b8';
+      }
+    }
+
+    async function testSendSummaryNow() {
+      try {
+        showToast('Mengompilasi dan mengirim rekap summary ke WhatsApp...');
+        const res = await fetch('/api/summary/send-now', { method: 'POST' });
+        const data = await res.json();
+        if (data.success) {
+          showToast('✅ ' + data.message);
+        } else {
+          showToast('❌ ' + (data.message || 'Gagal kirim summary'), true);
+        }
+      } catch (err) {
+        showToast('Gagal mengirim summary: ' + err.message, true);
+      }
+    }
+
+    async function saveSettings(e) {
+      e.preventDefault();
+      const payload = {
+        WA_TARGET_JID: document.getElementById('cfgWaTarget').value.trim(),
+        CRON_SCHEDULE: document.getElementById('cfgCron').value.trim(),
+        IGNORE_SSL_ERRORS: document.getElementById('cfgSsl').value === 'true',
+        ALERT_DELAY_MINUTES: parseInt(document.getElementById('cfgAlertDelay').value, 10) || 0,
+        SUMMARY_ENABLED: document.getElementById('cfgSummaryEnabled').checked,
+        SUMMARY_INTERVAL_MINUTES: parseInt(document.getElementById('cfgSummaryInterval').value, 10) || 30,
+        SUMMARY_ONLY_IF_ERROR: document.getElementById('cfgSummaryOnlyIfError').checked,
+        ALERT_TEMPLATE: document.getElementById('cfgTemplate').value,
+        SUMMARY_TEMPLATE: document.getElementById('cfgSummaryTemplate').value
+      };
+      await saveConfigApi(payload);
+    }
+
+    // Connect Server-Sent Events (SSE Real-time Stream)
+    function initRealtimeStream() {
+      const liveBadge = document.getElementById('liveStreamBadge');
+      const liveText = document.getElementById('liveStreamText');
+
+      if (window.EventSource) {
+        sseEventSource = new EventSource('/api/stream');
+
+        sseEventSource.addEventListener('state', (e) => {
+          try {
+            const data = JSON.parse(e.data);
+            applySystemState(data);
+            if (liveBadge) {
+              liveBadge.className = 'live-stream-badge';
+              liveText.textContent = 'REAL-TIME LIVE STREAM';
+            }
+          } catch (err) {
+            console.error('Error parsing SSE state:', err);
+          }
+        });
+
+        sseEventSource.onerror = () => {
+          if (liveBadge) {
+            liveBadge.className = 'live-stream-badge disconnected';
+            liveText.textContent = 'RECONNECTING STREAM...';
+          }
+        };
+      } else {
+        // Fallback short polling if EventSource is not supported
+        setInterval(async () => {
+          try {
+            const res = await fetch('/api/status');
+            const data = await res.json();
+            applySystemState(data);
+          } catch(e) {}
+        }, 2500);
+      }
+    }
+
+    // Live Date & Time Clock
+    function updateLiveClock() {
+      try {
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('id-ID', {
+          weekday: 'long',
+          day: 'numeric',
+          month: 'short',
+          year: 'numeric'
+        });
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+        const timeStr = `${hours}:${minutes}:${seconds} WIB`;
+
+        const dateEl = document.getElementById('topbarDate');
+        const timeEl = document.getElementById('topbarTime');
+        if (dateEl) dateEl.textContent = dateStr;
+        if (timeEl) timeEl.textContent = timeStr;
+      } catch (e) {
+        console.error('Error in live clock:', e);
+      }
+    }
+
+    // Initial Fetch & Connect Stream & Start Clock & Sparklines
+    initAllSparklines();
+    updateLiveClock();
+    setInterval(updateLiveClock, 1000);
+    fetch('/api/status').then(r => r.json()).then(applySystemState).catch(console.error);
+    initRealtimeStream();
+  </script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+{
+  "name": "scope-engine",
+  "version": "3.0.0",
+  "description": "SCOPE — System Control, Operations & Performance Engine",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "node --watch app.js"
+  },
+  "keywords": [
+    "monitoring",
+    "chronos",
+    "scheduler",
+    "baileys",
+    "whatsapp",
+    "cron"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@whiskeysockets/baileys": "^6.7.9",
+    "axios": "^1.7.9",
+    "express": "^4.21.2",
+    "node-cron": "^3.0.3",
+    "pino": "^9.6.0",
+    "qrcode-terminal": "^0.12.0"
+  }
+}
