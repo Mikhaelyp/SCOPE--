@@ -1,5 +1,65 @@
 [
   {
+    "id": "jmujudtd923",
+    "event": "em1euo0eo4f",
+    "serverName": "JOBS 3013",
+    "jobName": "52.MSTOCKDIST INA KARAWANG (DIKWG001)",
+    "category": "STOCK INAJWA2",
+    "code": 1,
+    "description": "Script exited with code: 1",
+    "time_start": 1790514970.605,
+    "timeStr": "27/9/2026, 20.16.10",
+    "elapsed": "1.2s",
+    "resolved": false,
+    "latestStatus": "Failed (Code 1)",
+    "latestRunTime": "27/9/2026, 20.16.10"
+  },
+  {
+    "id": "jmuixnltlxm",
+    "event": "em0dl4lcag8",
+    "serverName": "JOBS 3013",
+    "jobName": "ASW MSTOCKDIST DAMDN02",
+    "category": "Stock",
+    "code": 1,
+    "description": "Script exited with code: 1",
+    "time_start": 1790460000.057,
+    "timeStr": "27/9/2026, 05.00.00",
+    "elapsed": "2.2s",
+    "resolved": false,
+    "latestStatus": "Failed (Code 1)",
+    "latestRunTime": "27/9/2026, 05.00.00"
+  },
+  {
+    "id": "jmuixnltfxl",
+    "event": "em0dl6pjogu",
+    "serverName": "JOBS 3013",
+    "jobName": "ASW MSTOCKDIST DAPKK001",
+    "category": "Stock",
+    "code": 1,
+    "description": "Script exited with code: 1",
+    "time_start": 1790460000.051,
+    "timeStr": "27/9/2026, 05.00.00",
+    "elapsed": "2.2s",
+    "resolved": false,
+    "latestStatus": "Failed (Code 1)",
+    "latestRunTime": "27/9/2026, 05.00.00"
+  },
+  {
+    "id": "jmuixnltaxk",
+    "event": "em0dl7yjbgv",
+    "serverName": "JOBS 3013",
+    "jobName": "ASW MSTOCKDIST DAUJT001",
+    "category": "Stock",
+    "code": 1,
+    "description": "Script exited with code: 1",
+    "time_start": 1790460000.046,
+    "timeStr": "27/9/2026, 05.00.00",
+    "elapsed": "2.2s",
+    "resolved": false,
+    "latestStatus": "Failed (Code 1)",
+    "latestRunTime": "27/9/2026, 05.00.00"
+  },
+  {
     "id": "jmuir84i3xb",
     "event": "emttueug7yy",
     "serverName": "JOBS 3013",
@@ -72,7 +132,7 @@
     "elapsed": "1.9s",
     "resolved": false,
     "latestStatus": "Failed (Code 1)",
-    "latestRunTime": "27/9/2026, 01.16.39"
+    "latestRunTime": "27/9/2026, 20.16.10"
   },
   {
     "id": "jmuiitqmimz",
@@ -87,7 +147,7 @@
     "elapsed": "1.4s",
     "resolved": false,
     "latestStatus": "Failed (Code 1)",
-    "latestRunTime": "27/9/2026, 01.16.39"
+    "latestRunTime": "27/9/2026, 20.16.10"
   },
   {
     "id": "jmuiisjsall",
@@ -102,7 +162,7 @@
     "elapsed": "5.8s",
     "resolved": true,
     "latestStatus": "Recovered (Sukses di retry)",
-    "latestRunTime": "27/9/2026, 01.16.04"
+    "latestRunTime": "27/9/2026, 20.15.35"
   },
   {
     "id": "jmuiisg3llk",
@@ -115,9 +175,9 @@
     "time_start": 1790435031.681,
     "timeStr": "26/9/2026, 22.03.51",
     "elapsed": "6.8s",
-    "resolved": false,
-    "latestStatus": "Failed (Code 1)",
-    "latestRunTime": "26/9/2026, 22.03.51"
+    "resolved": true,
+    "latestStatus": "Recovered (Sukses di retry)",
+    "latestRunTime": "27/9/2026, 21.00.19"
   },
   {
     "id": "jmuiisffulj",
@@ -132,7 +192,7 @@
     "elapsed": "12.2s",
     "resolved": true,
     "latestStatus": "Recovered (Sukses di retry)",
-    "latestRunTime": "26/9/2026, 22.33.34"
+    "latestRunTime": "27/9/2026, 22.32.51"
   },
   {
     "id": "jmuiisew8li",
@@ -147,7 +207,7 @@
     "elapsed": "6.3s",
     "resolved": true,
     "latestStatus": "Recovered (Sukses di retry)",
-    "latestRunTime": "27/9/2026, 01.16.01"
+    "latestRunTime": "27/9/2026, 20.15.33"
   },
   {
     "id": "jmuiise7glh",
@@ -162,7 +222,7 @@
     "elapsed": "12.7s",
     "resolved": true,
     "latestStatus": "Recovered (Sukses di retry)",
-    "latestRunTime": "26/9/2026, 22.33.57"
+    "latestRunTime": "27/9/2026, 22.33.24"
   },
   {
     "id": "jmuiis0ntlf",
@@ -177,7 +237,7 @@
     "elapsed": "19.1s",
     "resolved": true,
     "latestStatus": "Recovered (Sukses di retry)",
-    "latestRunTime": "26/9/2026, 22.33.13"
+    "latestRunTime": "27/9/2026, 22.32.33"
   },
   {
     "id": "jmuigilitcm",
@@ -190,9 +250,9 @@
     "time_start": 1790431212.917,
     "timeStr": "26/9/2026, 21.00.12",
     "elapsed": "3618.1s",
-    "resolved": false,
-    "latestStatus": "Failed (Code 1)",
-    "latestRunTime": "26/9/2026, 21.00.12"
+    "resolved": true,
+    "latestStatus": "Recovered (Sukses di retry)",
+    "latestRunTime": "27/9/2026, 21.00.13"
   },
   {
     "id": "jmuigibqach",
@@ -207,7 +267,7 @@
     "elapsed": "3610.9s",
     "resolved": true,
     "latestStatus": "Recovered (Sukses di retry)",
-    "latestRunTime": "27/9/2026, 01.17.31"
+    "latestRunTime": "27/9/2026, 22.50.31"
   },
   {
     "id": "jmuif1z062a",
@@ -222,7 +282,7 @@
     "elapsed": "15.2s",
     "resolved": true,
     "latestStatus": "Recovered (Sukses di retry)",
-    "latestRunTime": "27/9/2026, 01.17.31"
+    "latestRunTime": "27/9/2026, 22.50.31"
   },
   {
     "id": "jmuiexa0w1o",
@@ -237,7 +297,7 @@
     "elapsed": "3612.4s",
     "resolved": true,
     "latestStatus": "Recovered (Sukses di retry)",
-    "latestRunTime": "27/9/2026, 01.15.54"
+    "latestRunTime": "27/9/2026, 20.15.29"
   },
   {
     "id": "jmuievm5a0z",
@@ -312,7 +372,7 @@
     "elapsed": "29.0s",
     "resolved": true,
     "latestStatus": "Recovered (Sukses di retry)",
-    "latestRunTime": "26/9/2026, 21.30.00"
+    "latestRunTime": "27/9/2026, 21.30.00"
   },
   {
     "id": "jmui6v3kn38",
@@ -327,7 +387,7 @@
     "elapsed": "24.1s",
     "resolved": true,
     "latestStatus": "Recovered (Sukses di retry)",
-    "latestRunTime": "26/9/2026, 21.30.00"
+    "latestRunTime": "27/9/2026, 21.30.00"
   },
   {
     "id": "jmui4ta95nk",
@@ -342,7 +402,7 @@
     "elapsed": "33.7s",
     "resolved": true,
     "latestStatus": "Recovered (Sukses di retry)",
-    "latestRunTime": "26/9/2026, 21.31.53"
+    "latestRunTime": "27/9/2026, 21.31.35"
   },
   {
     "id": "jmui4rgjamd",
@@ -357,7 +417,7 @@
     "elapsed": "21.1s",
     "resolved": true,
     "latestStatus": "Recovered (Sukses di retry)",
-    "latestRunTime": "26/9/2026, 21.30.23"
+    "latestRunTime": "27/9/2026, 21.30.19"
   },
   {
     "id": "jmui4pxudlv",
@@ -372,7 +432,7 @@
     "elapsed": "65.7s",
     "resolved": true,
     "latestStatus": "Recovered (Sukses di retry)",
-    "latestRunTime": "26/9/2026, 21.30.00"
+    "latestRunTime": "27/9/2026, 21.30.00"
   },
   {
     "id": "jmui2o3ve68",
@@ -387,7 +447,7 @@
     "elapsed": "50.8s",
     "resolved": true,
     "latestStatus": "Recovered (Sukses di retry)",
-    "latestRunTime": "26/9/2026, 21.31.53"
+    "latestRunTime": "27/9/2026, 21.31.35"
   },
   {
     "id": "jmui2lzml4u",
@@ -402,7 +462,7 @@
     "elapsed": "21.8s",
     "resolved": true,
     "latestStatus": "Recovered (Sukses di retry)",
-    "latestRunTime": "26/9/2026, 21.30.23"
+    "latestRunTime": "27/9/2026, 21.30.19"
   },
   {
     "id": "jmui2ks1h4k",
@@ -417,7 +477,7 @@
     "elapsed": "50.7s",
     "resolved": true,
     "latestStatus": "Recovered (Sukses di retry)",
-    "latestRunTime": "26/9/2026, 21.30.00"
+    "latestRunTime": "27/9/2026, 21.30.00"
   },
   {
     "id": "jmui0j4bsoz",
@@ -432,7 +492,7 @@
     "elapsed": "27.6s",
     "resolved": true,
     "latestStatus": "Recovered (Sukses di retry)",
-    "latestRunTime": "26/9/2026, 21.31.53"
+    "latestRunTime": "27/9/2026, 21.31.35"
   },
   {
     "id": "jmui0hwwno9",
@@ -447,7 +507,7 @@
     "elapsed": "56.3s",
     "resolved": true,
     "latestStatus": "Recovered (Sukses di retry)",
-    "latestRunTime": "26/9/2026, 21.31.14"
+    "latestRunTime": "27/9/2026, 21.31.14"
   },
   {
     "id": "jmui0gk1enk",
@@ -462,7 +522,7 @@
     "elapsed": "21.9s",
     "resolved": true,
     "latestStatus": "Recovered (Sukses di retry)",
-    "latestRunTime": "26/9/2026, 21.30.23"
+    "latestRunTime": "27/9/2026, 21.30.19"
   },
   {
     "id": "jmui0fm9una",
@@ -477,7 +537,7 @@
     "elapsed": "38.0s",
     "resolved": true,
     "latestStatus": "Recovered (Sukses di retry)",
-    "latestRunTime": "26/9/2026, 21.30.00"
+    "latestRunTime": "27/9/2026, 21.30.00"
   },
   {
     "id": "jmuhydkp07o",
@@ -492,7 +552,7 @@
     "elapsed": "27.6s",
     "resolved": true,
     "latestStatus": "Recovered (Sukses di retry)",
-    "latestRunTime": "26/9/2026, 21.31.53"
+    "latestRunTime": "27/9/2026, 21.31.35"
   },
   {
     "id": "jmuhycwp376",
@@ -507,7 +567,7 @@
     "elapsed": "31.1s",
     "resolved": true,
     "latestStatus": "Recovered (Sukses di retry)",
-    "latestRunTime": "26/9/2026, 21.31.14"
+    "latestRunTime": "27/9/2026, 21.31.14"
   },
   {
     "id": "jmuhybbvd69",
@@ -522,7 +582,7 @@
     "elapsed": "22.1s",
     "resolved": true,
     "latestStatus": "Recovered (Sukses di retry)",
-    "latestRunTime": "26/9/2026, 21.30.23"
+    "latestRunTime": "27/9/2026, 21.30.19"
   },
   {
     "id": "jmuhyagip5z",
@@ -537,7 +597,7 @@
     "elapsed": "35.1s",
     "resolved": true,
     "latestStatus": "Recovered (Sukses di retry)",
-    "latestRunTime": "26/9/2026, 21.30.00"
+    "latestRunTime": "27/9/2026, 21.30.00"
   },
   {
     "id": "jmuhw8cuqph",
@@ -552,7 +612,7 @@
     "elapsed": "32.6s",
     "resolved": true,
     "latestStatus": "Recovered (Sukses di retry)",
-    "latestRunTime": "26/9/2026, 21.31.53"
+    "latestRunTime": "27/9/2026, 21.31.35"
   },
   {
     "id": "jmuhw7vfzp3",
@@ -567,7 +627,7 @@
     "elapsed": "22.6s",
     "resolved": true,
     "latestStatus": "Recovered (Sukses di retry)",
-    "latestRunTime": "26/9/2026, 21.31.14"
+    "latestRunTime": "27/9/2026, 21.31.14"
   },
   {
     "id": "jmuhw7cgcop",
@@ -582,7 +642,7 @@
     "elapsed": "24.6s",
     "resolved": true,
     "latestStatus": "Recovered (Sukses di retry)",
-    "latestRunTime": "26/9/2026, 21.30.58"
+    "latestRunTime": "27/9/2026, 21.30.55"
   },
   {
     "id": "jmuhw6ov7ob",
@@ -597,7 +657,7 @@
     "elapsed": "12.5s",
     "resolved": true,
     "latestStatus": "Recovered (Sukses di retry)",
-    "latestRunTime": "26/9/2026, 21.30.37"
+    "latestRunTime": "27/9/2026, 21.30.34"
   },
   {
     "id": "jmuhw6brdo4",
@@ -612,7 +672,7 @@
     "elapsed": "17.0s",
     "resolved": true,
     "latestStatus": "Recovered (Sukses di retry)",
-    "latestRunTime": "26/9/2026, 21.30.23"
+    "latestRunTime": "27/9/2026, 21.30.19"
   },
   {
     "id": "jmuhw5aqfns",
@@ -627,6 +687,6 @@
     "elapsed": "42.4s",
     "resolved": true,
     "latestStatus": "Recovered (Sukses di retry)",
-    "latestRunTime": "26/9/2026, 21.30.00"
+    "latestRunTime": "27/9/2026, 21.30.00"
   }
 ]

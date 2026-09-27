@@ -115,5 +115,32 @@
     "status": "Error (Code: 1)",
     "lastRun": "27/9/2026, 02.00.00",
     "description": "Script exited with code: 1: sudo: unknown user eska"
+  },
+  {
+    "key": "JOBS 3013_ASW MSTOCKDIST DAMDN02_1790460000.057",
+    "date": "2026-09-26T22:00:46.542Z",
+    "serverName": "JOBS 3013",
+    "jobName": "ASW MSTOCKDIST DAMDN02",
+    "status": "Error (Code: 1)",
+    "lastRun": "27/9/2026, 05.00.00",
+    "description": "Script exited with code: 1"
+  },
+  {
+    "key": "JOBS 3013_ASW MSTOCKDIST DAPKK001_1790460000.051",
+    "date": "2026-09-26T22:00:47.122Z",
+    "serverName": "JOBS 3013",
+    "jobName": "ASW MSTOCKDIST DAPKK001",
+    "status": "Error (Code: 1)",
+    "lastRun": "27/9/2026, 05.00.00",
+    "description": "Script exited with code: 1"
+  },
+  {
+    "key": "JOBS 3013_ASW MSTOCKDIST DAUJT001_1790460000.046",
+    "date": "2026-09-26T22:00:47.740Z",
+    "serverName": "JOBS 3013",
+    "jobName": "ASW MSTOCKDIST DAUJT001",
+    "status": "Error (Code: 1)",
+    "lastRun": "27/9/2026, 05.00.00",
+    "description": "Script exited with code: 1"
   }
 ]
